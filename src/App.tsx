@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Board from './pages/Board/Board';
 
@@ -12,16 +12,10 @@ function App(): React.ReactElement {
     <div className="App">
       <header className="App-header">
         <Router>
-          <div>
-            <Switch>
-              <Route path="/">
-                <Home />
-              </Route>
-              <Route path="/board">
-                <Board />
-              </Route>
-            </Switch>
-          </div>
+          <Routes>
+            <Route path="Board" element={<Board />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
         </Router>
       </header>
     </div>

@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'Pacifico', cursive;
+  src: url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+}
+:root{
+  --bg-color: rgb(196, 251, 187);
+}
+body{
+  background-color: var(--bg-color);
+  font-family: 'Pacifico', cursive;
+}
+button{
+  width: 100%;
+  font-size: 1.5em;
+  background-color: #CBFBF6;
+  padding: 5px 0 5px 0;
+  border-radius: 50px;
+  border: 4px black solid;
+}
+button:hover{
+  background-color: #e1fffa;
+  cursor: pointer;
+}
+.table_title{
+  background-color: #B7F6F0;
+  border: 5px black solid;
+  margin: 20px 0 20px 0;
+  text-align: center;
+  padding: 5px 10px 5px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+
+}
+.table_title_div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.button_column{
+  display: flex;
+  justify-content: start;
+  width: calc(100vw/5);
+  height: 100%;
+}

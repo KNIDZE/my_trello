@@ -1,0 +1,25 @@
+
+.card{
+  background-color: #FFDADD;
+  width: calc(100vw/5);
+  margin: 0 20px 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  border: 5px solid black;
+  border-radius: 50px;
+  height: 500px;
+  box-shadow: 0 3px 5px black ;
+}
+h2{
+  text-align: center;
+  background-color: #C4FBBB;
+  width: 80%;
+  padding: 5px 0 5px 0;
+  border: 5px solid black;
+  border-radius: 30px;
+
+}
+h2:hover{
+  background-color: #d8fdd2;
+}
