@@ -1,0 +1,28 @@
+.home{
+  height: 100vh;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+a{
+  font-size: 25px;
+}
+.home_title{
+  font-family: var(--secondary-font);
+  color: #ffc400;
+  font-size: 50px;
+  position: absolute;
+  top: 5%;
+}
+.home .container{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+#add_board{
+  background-color: #ED8C6B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

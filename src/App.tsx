@@ -2,10 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Board from './pages/Board/Board';
-
-function Home(): React.ReactElement {
-  return <div>THIS IS FIRST PAGE</div>;
-}
+import Home from './pages/Home/Home';
 
 function App(): React.ReactElement {
   return (

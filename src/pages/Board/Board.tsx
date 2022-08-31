@@ -46,24 +46,20 @@ export default class Board extends React.Component<{}, MyState> {
   render(): React.ReactElement {
     const { title, lists } = this.state;
     // eslint-disable-next-line no-console,react/jsx-key,array-callback-return
-    const renderList = lists.map((key) => (
-      // eslint-disable-next-line react/jsx-key
-      <List title={key.title} cards={key.cards} />
-    ));
+    const renderList = lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} />);
     return (
-      <div>
+      <section className="board_section">
         <div className="table_title_div">
+          <button className="home">Домой</button>
           <h1 className="table_title">{title}</h1>
         </div>
-        <div className="cards_div">
-          <div className="container">
-            {renderList}
-            <div className="button_column">
-              <button>Новый список</button>
-            </div>
+        <div className="container">
+          {renderList}
+          <div className="button_column">
+            <button>Новый список</button>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 }

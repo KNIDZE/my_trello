@@ -2,28 +2,37 @@
   font-family: 'Pacifico', cursive;
   src: url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 }
+@font-face {
+  font-family: 'Amatic SC', cursive;
+  src: url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+}
 :root{
-  --bg-color: rgb(196, 251, 187);
+  --bg-color: rgb(0, 86, 140);
+  --main-font: 'Pacifico', cursive;
+  --secondary-font: 'Amatic SC', cursive;
 }
 body{
   background-color: var(--bg-color);
-  font-family: 'Pacifico', cursive;
+  font-family: var(--main-font);
 }
 button{
+  font-family: 'Pacifico', cursive;
   width: 100%;
+  height: 15%;
   font-size: 1.5em;
-  background-color: #CBFBF6;
+  background-color: #EDBF3B;
   padding: 5px 0 5px 0;
-  border-radius: 50px;
-  border: 4px black solid;
+  border-radius: 40px;
+  border: 5px black solid;
 }
 button:hover{
-  background-color: #e1fffa;
+  background-color: #f1c763;
   cursor: pointer;
 }
 .table_title{
-  background-color: #B7F6F0;
-  border: 5px black solid;
+  font-family: var(--secondary-font);
+  font-size: 40px;
+  color: #ff8d63;
   margin: 20px 0 20px 0;
   text-align: center;
   padding: 5px 10px 5px 10px;
@@ -32,19 +41,38 @@ button:hover{
 
 }
 .table_title_div{
+  margin: 0 auto 0 auto;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: fit-content;
 }
 .container{
+  width: fit-content;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
 }
 .button_column{
   display: flex;
-  justify-content: start;
-  width: calc(100vw/5);
-  height: 100%;
+  justify-content: flex-start;
+  width: 300px;
+  height: 500px;
+}
+button.home{
+  font-size: 1.2em;
+  text-transform: capitalize;
+  padding: 5px 10px 5px 10px;
+  position: absolute;
+  width: auto;
+  height: auto;
+  right: -40%;
+  border-radius: 10px;
+}
+.board_section{
+  min-height: 100vh;
+  overflow: scroll;
 }

@@ -1,0 +1,15 @@
+p{
+  margin: 5px 0 5px 0;
+  font-size: 18px;
+}
+.card{
+  width: 75%;
+  background-color: #bbdffd;
+  margin: 10px 0 10px 0;
+  padding: 0 2.5% 0 2.5%;
+  border: 5px solid black;
+  border-radius: 20px;
+}
+p::first-letter{
+  text-transform: capitalize;
+}
