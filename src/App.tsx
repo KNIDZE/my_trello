@@ -10,7 +10,8 @@ function App(): React.ReactElement {
       <header className="App-header">
         <Router>
           <Routes>
-            <Route path="Board" element={<Board />} />
+            <Route path="/board/:boardId" element={<Board />} />
+            <Route path="/board/:boardId" element={<Board />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Router>

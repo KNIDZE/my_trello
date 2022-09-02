@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 import Board from './components/Board/Board';
 import './home.scss';
 
@@ -18,7 +19,11 @@ export default class Home extends React.Component<unknown, { boards: Array<{ id:
 
   render(): ReactElement {
     const { boards } = this.state;
-    const boardsList = boards.map((key) => <Board key={key.id} title={key.title} id={key.id} />);
+    const boardsList = boards.map((key) => (
+      <Link key={key.id} to="/board/:boardId">
+        <Board title={key.title} id={key.id} />
+      </Link>
+    ));
     return (
       <section className="home">
         <h1 className="home_title">Мои доски</h1>
