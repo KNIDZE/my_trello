@@ -1,39 +1,40 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Board from './components/Board/Board';
+import { getBoards } from '../../store/modules/boards/actions';
 import './home.scss';
 
+type PropsType = {
+  boards: [{ id: number; title: string }];
+  getBoards: () => Promise<void>
+};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type StateType = {};
+
 // eslint-disable-next-line react/prefer-stateless-function
-export default class Home extends React.Component<unknown, { boards: Array<{ id: number; title: string }> }> {
-  constructor(props: unknown) {
-    super(props);
-    this.state = {
-      boards: [
-        { id: 1, title: 'покупки' },
-        { id: 2, title: 'подготовка к свадьбе' },
-        { id: 3, title: 'разработка интернет-магазина' },
-        { id: 4, title: 'курс по продвижению в соцсетях' },
-      ],
-    };
+class Home extends React.Component<PropsType, StateType> {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  async componentDidMount() {
+    // eslint-disable-next-line react/destructuring-assignment
+    await this.props.getBoards();
   }
 
   render(): ReactElement {
-    const { boards } = this.state;
-    const boardsList = boards.map((key) => (
-      <Link key={key.id} to="/board/:boardId">
+    /* const { boards } = this.props;
+     const boardsList = boards.map((key) => (
+      <Link key={key.id} to="/boards/:boardId">
         <Board title={key.title} id={key.id} />
       </Link>
-    ));
-    return (
-      <section className="home">
-        <h1 className="home_title">Мои доски</h1>
-        <div className="container">
-          {boardsList}
-          <div className="board" id="add_board">
-            <a>+</a>&nbsp;Создать доску
-          </div>
-        </div>
-      </section>
-    );
+    )); */
+    const { boards } = this.props;
+    return <div>{JSON.stringify(boards)}</div>;
   }
 }
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const mapStateToProps = (state) => ({
+  ...state.boards,
+});
+export default connect(mapStateToProps, {})(Home);
