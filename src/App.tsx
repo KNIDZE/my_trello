@@ -11,7 +11,6 @@ function App(): React.ReactElement {
         <Router>
           <Routes>
             <Route path="/board/:boardId" element={<Board />} />
-            <Route path="/board/:boardId" element={<Board />} />
             <Route path="/" element={<Home />} />
           </Routes>
         </Router>

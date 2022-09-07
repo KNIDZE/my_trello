@@ -8,6 +8,14 @@
 }
 a{
   font-size: 25px;
+  text-decoration: none;
+  color: black;
+}
+a:active{
+  color: initial;
+}
+a:hover div.board{
+  background-color: #f1d591;
 }
 .home_title{
   font-family: var(--secondary-font);
@@ -15,6 +23,8 @@ a{
   font-size: 50px;
   position: absolute;
   top: 5%;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 .home .container{
   display: grid;

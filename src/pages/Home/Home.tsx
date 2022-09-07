@@ -10,16 +10,14 @@ import './home.scss';
 import { IBoard } from '../../common/interfaces/IBoard';
 
 type PropsType = {
-  boards: IBoard[];
+  boards: { boards: IBoard[] };
 };
 type StateType = {
-  boards: IBoard[];
+  boards: { boards: IBoard[] };
 };
 function Home({ boards }: PropsType): React.ReactElement {
-  // eslint-disable-next-line no-console
-  console.log(boards);
-  const boardsList = boards.map((key) => (
-    <Link key={key.id} to="/boards/:boardId">
+  const boardsList = boards.boards.map((key) => (
+    <Link key={key.id} to="/board/:boardId">
       <Board title={key.title} id={key.id} />
     </Link>
   ));
@@ -36,6 +34,6 @@ function Home({ boards }: PropsType): React.ReactElement {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const mapStateToProps = (state: StateType) => ({
-  boards: [...state.boards],
+  boards: state.boards,
 });
 export default connect(mapStateToProps, { getBoards })(Home);

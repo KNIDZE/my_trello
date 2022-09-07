@@ -9,7 +9,6 @@ export const getBoards = () => async (dispatch: Dispatch) => {
     const { boards } = await api.get('/board');
     await dispatch({ type: 'UPDATE_BOARDS', payload: boards });
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log(e);
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
