@@ -10,7 +10,7 @@ h3{
   height: 80px;
   background-color: #EDCB6B;
   margin: 15px;
-  border: 5px solid black;
+  border: var(--main-border);
   border-radius: 15px;
   cursor: pointer;
 }

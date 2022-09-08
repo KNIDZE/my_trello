@@ -10,6 +10,7 @@
   --bg-color: rgb(0, 86, 140);
   --main-font: 'Pacifico', cursive;
   --secondary-font: 'Amatic SC', cursive;
+  --main-border: 5px solid black;
 }
 body{
   background-color: var(--bg-color);
@@ -23,7 +24,7 @@ button{
   background-color: #EDBF3B;
   padding: 5px 0 5px 0;
   border-radius: 40px;
-  border: 5px black solid;
+  border: var(--main-border)
 }
 button:hover{
   background-color: #f1c763;
@@ -66,13 +67,15 @@ button.home{
   font-size: 1.2em;
   text-transform: capitalize;
   padding: 5px 10px 5px 10px;
-  position: absolute;
   width: auto;
   height: auto;
-  right: -40%;
   border-radius: 10px;
 }
 .board_section{
   min-height: 100vh;
   overflow: scroll;
+}
+.link_home{
+  right: -40%;
+  position: absolute;
 }
