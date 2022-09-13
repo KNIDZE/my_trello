@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import BoardCreatorModule from './BoardCreatorModul';
+import { hideShowCreator } from '../../../../store/modules/BoardsCreator/actions';
 
-export default function BoardCreator(): JSX.Element {
-  const [creationVisible, setCreationVisible] = useState(false);
-  if (creationVisible) {
+interface StateProps {
+  boardCreatorVisible: boolean;
+}
+function BoardCreator(props: CreatorProps): JSX.Element {
+  const { boardCreatorVisible, changeCreatorsVisibility } = props;
+  if (boardCreatorVisible) {
     return (
       <div>
-        <div onClick={(): void => setCreationVisible(!creationVisible)} className="add_board board">
+        <div onClick={changeCreatorsVisibility} className="add_board board">
           <b>+ Добавить таблицу</b>
         </div>
         <BoardCreatorModule />
@@ -14,8 +19,17 @@ export default function BoardCreator(): JSX.Element {
     );
   }
   return (
-    <div onClick={(): void => setCreationVisible(!creationVisible)} className="add_board board">
+    <div onClick={changeCreatorsVisibility} className="add_board board">
       <b>+ Добавить таблицу</b>
     </div>
   );
 }
+
+const mapStateToProps = (state: { boardCreator: { boardCreatorVisible: boolean } }): StateProps => ({
+  boardCreatorVisible: state.boardCreator.boardCreatorVisible,
+});
+
+const connector = connect(mapStateToProps, hideShowCreator);
+type CreatorProps = ConnectedProps<typeof connector>;
+
+export default connector(BoardCreator);
