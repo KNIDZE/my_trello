@@ -20,7 +20,7 @@ function BoardCreator(props: CreatorProps): JSX.Element {
   }
   return (
     <div onClick={changeCreatorsVisibility} className="add_board board">
-      <b>+ Добавить таблицу</b>
+      <b>+ Добавить доску</b>
     </div>
   );
 }

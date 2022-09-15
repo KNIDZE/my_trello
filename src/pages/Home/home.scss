@@ -2,14 +2,15 @@ section.home{
   overflow-y: scroll;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   position: relative;
-  justify-content: center;
   align-items: center;
   user-select: none;
 }
 a{
   text-decoration: none;
   color: black;
+  z-index: 1;
 }
 .board{
   font-size: 25px;
@@ -20,14 +21,13 @@ a:active{
 a:hover div.board{
   background-color: #f1d591;
 }
+a:hover .delete_button{
+  display: block;
+}
 .home_title{
   font-family: var(--secondary-font);
   color: #ffc400;
   font-size: 50px;
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translate(-50%, 0);
 }
 .home .container{
   display: grid;
@@ -44,5 +44,9 @@ a:hover div.board{
 }
 .add_board:hover{
   background-color: #eaa78c;
-
+}
+.check_block{
+  height: 100px;
+  width: 100px;
+  background-color: red;
 }

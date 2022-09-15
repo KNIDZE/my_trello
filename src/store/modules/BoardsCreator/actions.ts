@@ -1,24 +1,52 @@
 import { Dispatch } from 'redux';
+import api from '../../../api/request';
+import { getBoards } from '../boards/actions';
 
 export function hideShowCreator(dispatch: Dispatch): { changeCreatorsVisibility: () => void } {
   return {
     changeCreatorsVisibility: (): void => {
-      dispatch({ type: 'ADD_BOARD' });
+      dispatch({ type: 'SHOW_HIDE_BOARD_CREATOR' });
     },
   };
 }
 export interface AddBoard {
-  createBoard: () => void;
-  checkSaveTitle: (title: string | null) => void;
+  checkBoardTitle: (title: string) => void;
+  saveTitle: (title: string | null) => void;
+}
+
+export function wrongBoard(dispatch: Dispatch): void {
+  // eslint-disable-next-line no-console
+  console.log('Working');
+  dispatch({ type: 'WRONG_BOARD_TITLE', payload: true });
+}
+export async function createBoard(dispatch: Dispatch, board_title: string): Promise<object> {
+  const postResult = await api.post('/board', {
+    title: board_title,
+    custom: {},
+  });
+  dispatch({ type: 'CREATE_BOARD' });
+  return postResult;
 }
 export function addBoard(dispatch: Dispatch): AddBoard {
   return {
-    createBoard: (): void => {
-      dispatch({ type: 'CREATE_BOARD' });
+    checkBoardTitle: (title: string): void => {
+      if (title.search(/^[A-zА-я\d\s,._-]+$/gu) !== -1) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        createBoard(dispatch, title).then((r) => {
+          getBoards()(dispatch);
+        });
+      } else {
+        wrongBoard(dispatch);
+      }
     },
-    checkSaveTitle: (title: string | null): void => {
+    saveTitle: (title: string | null): void => {
       // eslint-disable-next-line no-console
-      dispatch({ type: 'CHECK_TITLE_INPUT', payload: title });
+      console.log(title);
+      dispatch({ type: 'SAVE_TITLE_INPUT', payload: title });
     },
   };
+}
+export interface NewBoardState {
+  boardCreatorVisible: boolean;
+  newBoardTitle: string;
 }

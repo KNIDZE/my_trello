@@ -4,6 +4,7 @@ h3{
   text-decoration: none;
 }
 .board, button.board{
+  position: relative;
   padding: 20px 20px 20px;
   display: flex;
   width: 180px;
@@ -13,4 +14,15 @@ h3{
   border: var(--main-border);
   border-radius: 15px;
   cursor: pointer;
+}
+.delete_button{
+  display: none;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border-radius: 20px;
+  height: 15px;
+  width: 15px;
+  background-color: #ff7676;
+  z-index: 50;
 }

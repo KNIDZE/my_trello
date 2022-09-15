@@ -1,31 +1,38 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import List from './components/List/List';
 import { ICard } from '../../common/interfaces/ICard.t';
 import './board.scss';
 import { getBoard } from '../../store/modules/board/actions';
+import List from './components/List/List';
 
-interface BoardState {
-  board: { title: string; lists: Array<{ id: number; title: string; cards: ICard[] }> };
-}
-
-interface BoardProps {
+interface BoardInterface {
   title: string;
   lists: Array<{ id: number; title: string; cards: ICard[] }>;
 }
+interface BoardState {
+  board: { board: BoardInterface };
+}
 
+interface BoardProps {
+  // eslint-disable-next-line react/no-unused-prop-types
+  board: {
+    title: string;
+    lists: Array<{ id: number; title: string; cards: ICard[] }>;
+  };
+}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function Board(props: BoardProps, state: BoardState): JSX.Element {
-  // eslint-disable-next-line no-console
-  console.log(props);
-  const { title, lists } = props;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const boardId = useParams();
-  // eslint-disable-next-line no-console
-  console.log(boardId);
-
-  const renderList = lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} />);
+function Board(props: BoardProps): JSX.Element {
+  let title;
+  let renderList;
+  try {
+    const { board } = props;
+    title = board.title;
+    renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} />);
+  } catch (e) {
+    title = '';
+    renderList = '';
+  }
   return (
     <section className="board_section">
       <div className="table_title_div">
@@ -44,7 +51,6 @@ function Board(props: BoardProps, state: BoardState): JSX.Element {
   );
 }
 const mapStateToProps = (state: BoardState): BoardProps => ({
-  title: state.board.title,
-  lists: state.board.lists,
+  board: state.board.board,
 });
 export default connect(mapStateToProps, { getBoard })(Board);
