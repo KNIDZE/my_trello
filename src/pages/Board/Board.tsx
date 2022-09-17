@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ICard } from '../../common/interfaces/ICard.t';
 import './board.scss';
-import { getBoard } from '../../store/modules/board/actions';
 import List from './components/List/List';
+import AddListButton from './components/addListButton/AddListButton';
 
 interface BoardInterface {
   title: string;
@@ -44,7 +44,7 @@ function Board(props: BoardProps): JSX.Element {
       <div className="container">
         {renderList}
         <div className="button_column">
-          <button>Новый список</button>
+          <AddListButton />
         </div>
       </div>
     </section>
@@ -53,4 +53,4 @@ function Board(props: BoardProps): JSX.Element {
 const mapStateToProps = (state: BoardState): BoardProps => ({
   board: state.board.board,
 });
-export default connect(mapStateToProps, { getBoard })(Board);
+export default connect(mapStateToProps)(Board);

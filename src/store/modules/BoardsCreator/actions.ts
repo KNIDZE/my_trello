@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import api from '../../../api/request';
 import { getBoards } from '../boards/actions';
+import { isStringValid } from '../../../common/commonFunctions';
 
 export function hideShowCreator(dispatch: Dispatch): { changeCreatorsVisibility: () => void } {
   return {
@@ -30,7 +31,7 @@ export async function createBoard(dispatch: Dispatch, board_title: string): Prom
 export function addBoard(dispatch: Dispatch): AddBoard {
   return {
     checkBoardTitle: (title: string): void => {
-      if (title.search(/^[A-zА-я\d\s,._-]+$/gu) !== -1) {
+      if (isStringValid(title)) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         createBoard(dispatch, title).then((r) => {
           getBoards()(dispatch);
