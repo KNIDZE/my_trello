@@ -2,6 +2,9 @@
 import api from '../../../api/request';
 import config from '../../../common/constants/api';
 import {Dispatch} from "redux";
+import { isStringValid } from '../../../common/commonFunctions';
+import { getBoards } from '../boards/actions';
+import { createBoard, wrongBoard } from '../BoardsCreator/actions';
 
 export const getBoard = () => async (dispatch: Dispatch, id:number) => {
   try {
@@ -13,23 +16,11 @@ export const getBoard = () => async (dispatch: Dispatch, id:number) => {
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 };
-/*
-export function addBoardElements(dispatch: Dispatch): AddBoard {
+
+export function addBoardElements(dispatch: Dispatch): {createList: ()=>void} {
   return {
-    checkBoardTitle: (title: string): void => {
-      if (isStringValid(title)) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        createList(dispatch, title).then(() => {
-          getBoards()(dispatch);
-        });
-      } else {
-        wrongBoard(dispatch);
-      }
-    },
-    saveTitle: (title: string | null): void => {
-      // eslint-disable-next-line no-console
-      console.log(title);
-      dispatch({ type: 'SAVE_TITLE_INPUT', payload: title });
-    },
-  };
-}*/
+    createList: ()=>{
+      dispatch({type: "CHANGE_ADD_BOARD"})
+    }
+  }
+}

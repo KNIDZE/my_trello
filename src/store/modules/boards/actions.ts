@@ -8,6 +8,7 @@ export const getBoards = () => async (dispatch: Dispatch): Promise<void> => {
     const {boards} = await api.get('/board');
     await dispatch({ type: 'UPDATE_BOARDS', payload: boards });
     await dispatch({ type: 'CLEAR_BOARD' });
+
   } catch (e) {
     console.log(e);
     dispatch({ type: 'ERROR_ACTION_TYPE' });

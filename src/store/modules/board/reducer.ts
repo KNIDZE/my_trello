@@ -2,6 +2,7 @@
 
 
 const initialState = {
+  showLabel: true,
 };
 
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
@@ -16,6 +17,11 @@ export default function reducer(state = initialState, action: { type: string, pa
         ...state,
         board : {id: undefined, title: '', lists: undefined} ,
       };
+    case 'CHANGE_ADD_BOARD':
+      return {
+        ...state,
+        showLabel: !state.showLabel
+      }
     default: {
       return { ...state };
     }
