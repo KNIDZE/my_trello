@@ -21,7 +21,7 @@ function Home({ boards }: PropsType): React.ReactElement {
     boardsList = boards.map((key) => (
       <Link
         onClick={(): void => {
-          getBoard()(dispatch, key.id).then();
+          getBoard()(dispatch, `${key.id}`).then();
         }}
         className="home_link"
         key={key.id}

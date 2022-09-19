@@ -28,7 +28,7 @@ function Board(props: BoardProps): JSX.Element {
   try {
     const { board } = props;
     title = board.title;
-    renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} />);
+    renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
   } catch (e) {
     title = '';
     renderList = '';

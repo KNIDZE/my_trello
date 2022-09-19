@@ -2,6 +2,7 @@
   --card-color: #ED693B;
 }
 .list{
+  position: relative;
   background-color: var(--card-color);
   width: 300px;
   margin: 0 20px 0 20px;
@@ -13,6 +14,7 @@
   height: 500px;
   box-shadow: 0 3px 5px black ;
   flex-direction: column;
+  z-index: 2;
 }
 h2{
   text-align: center;
@@ -40,4 +42,18 @@ h2:hover{
   margin: -3px -1px 0 0;
   text-align: center;
   font-size: 30px;
+}
+.list .delete_button{
+  background-color: #ff7676;
+  border: 5px solid black;
+  right: -5px;
+  display: none;
+  top: -10px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50px;
+  z-index: 1;
+}
+.list:hover .delete_button{
+  display: block;
 }
