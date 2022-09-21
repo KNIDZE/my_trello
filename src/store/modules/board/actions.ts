@@ -4,11 +4,26 @@ import config from '../../../common/constants/api';
 import {Dispatch} from "redux";
 import { isStringValid } from '../../../common/commonFunctions';
 
+interface Board{
+  title: string;
+  lists: [{id: number; position:number}];
+}
+function changeListsPosition(board: Board): {id: number; position:number}[]{
+  const result = []
+  for (let i = 0; i < board.lists.length; i++) {
+    const changeList = {id: board.lists[i].id, position: (i+1)}
+    result.push(changeList)
+  }
+  return result;
+
+
+}
 export const getBoard = () => async (dispatch: Dispatch, id:string) => {
   try {
     // @ts-ignore
-    const  board  = await api.get(`/board/${id}`);
-    console.log(board)
+    let  board: Board  = await api.get(`/board/${id}`);
+    const results = await api.put(`/board/${id}/list`,changeListsPosition(board))
+    board  = await api.get(`/board/${id}`);
     await dispatch({ type: 'LOAD_BOARD', payload: board });
   } catch (e) {
     console.log(e);
@@ -23,14 +38,15 @@ interface BoardElements{
 function creationError(){
   alert("It's not valid string")
 }
-async function addNewList(title: string, id:string, position:number){
-  console.log(title, id, position)
+
+
+async function addNewList(title: string, id:string, position:number, dispatch: Dispatch){
   try{
     const postResult = await api.post(`board/${id}/list`,{
       title: title,
       position: position,
     })
-    console.log(postResult)
+    dispatch({type:"CHANGE_ADD_BOARD"})
   }catch (e){
     console.log(e);
     }
@@ -42,7 +58,7 @@ export function addBoardElements(dispatch: Dispatch): BoardElements {
     },
     createList: (title, id, position)=>{
       if (isStringValid(title)){
-        addNewList(title, id, position).then(()=>getBoard()(dispatch, id));
+        addNewList(title, id, position, dispatch).then(()=>getBoard()(dispatch, id));
       }else{
         creationError()
       }
@@ -53,13 +69,39 @@ export function addBoardElements(dispatch: Dispatch): BoardElements {
 
   }
 }
-export const delList = () => async (dispatch: Dispatch, boardId:string, listId:string) => {
-  console.log(boardId, listId);
+
+export async function delList (dispatch: Dispatch, boardId:string, listId:string){
   try {
-    const  board  = await api.delete(`/board/${boardId}/list/${listId}`).then(()=>getBoard()(dispatch, boardId ));
-    console.log(board)
+    await api.delete(`/board/${boardId}/list/${listId}`).then(()=>getBoard()(dispatch, boardId ));
   } catch (e) {
     console.log(e);
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
-};
+}
+export async function renameList (dispatch: Dispatch, title:string, listId:string, boardId:string){
+  try {
+    await api.put(`/board/${boardId}/list/${listId}`);
+    getBoard()(dispatch, boardId );
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: 'ERROR_ACTION_TYPE' });
+  }
+}
+function renameRequest(title:string, boardId: string, dispatch:Dispatch){
+  api.put(`/board/${boardId}`,
+    {
+      title: title,
+      custom:{}
+    }).then(()=>getBoard()(dispatch, boardId))
+}
+export function boardFunctions(dispatch: Dispatch): {renameBoard(title: string, boardId:string): void} {
+  return {
+    renameBoard: (title, boardId: string)=>{
+      if (isStringValid(title)){
+        renameRequest(title, boardId, dispatch)
+      }else{
+        creationError();
+      }
+    },
+  }
+}

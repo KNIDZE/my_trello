@@ -14,8 +14,8 @@ export default function List(props: { title: string; cards: ICard[]; id: number 
   const cardsList = cards.map((key) => <Card key={key.id} title={key.title} />);
   return (
     <div className="list">
-      <div className="delete_button" onClick={(): Promise<void> => delList()(dispatch, boardId || '', id.toString())} />
-      <h2> {title} </h2>
+      <div className="delete_button" onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString())} />
+      <h2 contentEditable="true" > {title} </h2>
       {cardsList}
       <button className="add_card">
         <p>+</p>

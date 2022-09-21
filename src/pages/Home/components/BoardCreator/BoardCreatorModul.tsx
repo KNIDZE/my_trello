@@ -11,7 +11,6 @@ function BoardCreatorModule(props: CreatorProps): JSX.Element {
       <div
         contentEditable="true"
         id="new_board_naming"
-        data-ph="Ещё одна доска..."
         onBlur={(event): void => saveTitle(event.currentTarget.textContent)}
       />
       {/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */}
