@@ -7,6 +7,7 @@ import './home.scss';
 import { IBoard } from '../../common/interfaces/IBoard';
 import BoardCreator from './components/BoardCreator/BoardCreator';
 import { getBoard } from '../../store/modules/board/actions';
+import Loading from './components/Loading/Loading';
 
 type PropsType = {
   boards: IBoard[];
@@ -17,11 +18,11 @@ type StateType = {
 function Home({ boards }: PropsType): React.ReactElement {
   let boardsList;
   const dispatch = useDispatch();
-  try {
+  if (boards) {
     boardsList = boards.map((key) => (
       <Link
         onClick={(): void => {
-          getBoard()(dispatch, `${key.id}`).then();
+          getBoard()(dispatch, `${key.id}`);
         }}
         className="home_link"
         key={key.id}
@@ -30,19 +31,17 @@ function Home({ boards }: PropsType): React.ReactElement {
         <Board title={key.title} id={key.id} />
       </Link>
     ));
-  } catch (e) {
-    boardsList = '';
+    return (
+      <section className="home" id="home_section">
+        <h1 className="home_title">Мои доски</h1>
+        <div className="container">
+          {boardsList}
+          <BoardCreator />
+        </div>
+      </section>
+    );
   }
-  // onClick={(): Promise<void> => getBoard()(useDispatch(), key.id)} 1663237216589
-  return (
-    <section className="home" id="home_section">
-      <h1 className="home_title">Мои доски</h1>
-      <div className="container">
-        {boardsList}
-        <BoardCreator />
-      </div>
-    </section>
-  );
+  return <Loading />;
 }
 
 const mapStateToProps = (state: StateType): PropsType => ({

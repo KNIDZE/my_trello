@@ -6,6 +6,7 @@ import './board.scss';
 import List from './components/List/List';
 import AddListButton from './components/addListButton/AddListButton';
 import { boardFunctions } from '../../store/modules/board/actions';
+import Loading from '../Home/components/Loading/Loading';
 
 interface BoardInterface {
   title: string;
@@ -16,48 +17,44 @@ interface BoardState {
 }
 
 interface BoardProps {
-  // eslint-disable-next-line react/no-unused-prop-types
   board: {
     title: string;
     lists: Array<{ id: number; title: string; cards: ICard[] }>;
   };
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Board(props: AllBoardProps): JSX.Element {
   let title;
   let renderList;
   const { board, renameBoard } = props;
   const { boardId } = useParams();
-  try {
+  if (typeof board.title !== undefined && board.title !== '') {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
-  } catch (e) {
-    title = '';
-    renderList = '';
-  }
-  return (
-    <section className="board_section">
-      <div className="table_title_div">
-        <Link className="link_home" to="/">
-          <button className="home">Домой</button>
-        </Link>
-        <h1
-          className="table_title"
-          contentEditable="true"
-          data-ph="Ещё одна доска..."
-          onBlur={(event): void => renameBoard(event.currentTarget.textContent || '', boardId || '')}
-        >
-          {title}
-        </h1>
-      </div>
-      <div className="container">
-        {renderList}
-        <div className="button_column">
-          <AddListButton />
+    return (
+      <section className="board_section">
+        <div className="table_title_div">
+          <Link className="link_home" to="/">
+            <button className="home">Домой</button>
+          </Link>
+          <h1
+            className="table_title"
+            contentEditable="true"
+            data-ph="Ещё одна доска..."
+            onBlur={(event): void => renameBoard(event.currentTarget.textContent || '', boardId || '')}
+          >
+            {title}
+          </h1>
         </div>
-      </div>
-    </section>
-  );
+        <div className="container">
+          {renderList}
+          <div className="button_column">
+            <AddListButton />
+          </div>
+        </div>
+      </section>
+    );
+  }
+  return <Loading />;
 }
 const mapStateToProps = (state: BoardState): BoardProps => ({
   board: state.board.board,

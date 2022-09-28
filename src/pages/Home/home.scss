@@ -1,3 +1,6 @@
+:root{
+  --main-color: #f1d591;
+}
 section.home{
   overflow-y: scroll;
   height: 100vh;
@@ -35,6 +38,7 @@ a:hover .delete_button{
   height: auto;
 }
 .add_board{
+  animation: none;
   position: relative;
   font-size: 1em;
   background-color: #ED8C6B;

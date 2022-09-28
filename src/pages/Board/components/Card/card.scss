@@ -1,15 +1,54 @@
-p{
-  margin: 5px 0 5px 0;
+.inner_text{
   font-size: 18px;
+  resize: none;
+  white-space: pre;
+  width: calc(95% - 10px);
+  height: calc(95% - 10px);
+  border: 0;
+  background-color: inherit;
+  font-family: inherit;
+  outline: none;
+}
+
+.inner_text::-webkit-scrollbar{
+  width: 0;
+}
+.card p{
+  padding: 0;
+  margin: 0;
 }
 .card{
+  min-height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   width: 75%;
   background-color: #bbdffd;
   margin: 10px 0 10px 0;
   padding: 0 2.5% 0 2.5%;
   border: 5px solid black;
   border-radius: 20px;
+
 }
-p::first-letter{
-  text-transform: capitalize;
+.edit, .del_card{
+  display: none;
+  right: -15px;
+  bottom: -15px;
+  position: absolute;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  border: 5px solid black;
+  background-color: var(--bg-color);
+}
+.del_card{
+  right: -15px;
+  top: -15px;
+  background-color: var(--delete-color);
+
+}
+.card:hover .edit, .card:hover .del_card{
+  display: block;
 }

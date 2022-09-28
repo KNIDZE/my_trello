@@ -1,17 +1,22 @@
 :root{
   --card-color: #ED693B;
 }
+@keyframes showUp {
+  0%{width: 0; height: 0}
+  100%{width: 300px; height: 500px}
+}
 .list{
   position: relative;
   background-color: var(--card-color);
-  width: 300px;
+  width: 0;
+  height: 0;
+  animation: showUp 1s forwards;
   margin: 0 20px 0 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   border: 5px solid black;
   border-radius: 50px;
-  height: 500px;
   box-shadow: 0 3px 5px black ;
   flex-direction: column;
   z-index: 2;
@@ -21,30 +26,22 @@ h2{
   color: #070000;
   background-color: #EDBF3B;
   width: 80%;
+  height:35px;
   padding: 5px 0 5px 0;
   border: 5px solid black;
   border-radius: 30px;
   outline: none;
+  overflow: auto;
+}
+h2::-webkit-scrollbar{
+  width: auto;
 }
 h2:hover{
   background-color: #f1c763;
 }
-.add_card{
-  background-color: #318BC6;
-  border-radius:50%;
-  height: 35px;
-  width: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.add_card p{
-  margin: -3px -1px 0 0;
-  text-align: center;
-  font-size: 30px;
-}
+
 .list .delete_button{
-  background-color: #ff7676;
+  background-color: var(--delete-color);
   border: 5px solid black;
   right: -5px;
   display: none;

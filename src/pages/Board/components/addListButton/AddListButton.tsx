@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './addListButton.scss';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -15,11 +15,13 @@ interface ButtonState {
   board: { lists: [] };
 }
 function AddListButton(props: CreatorProps): React.ReactElement {
-  const { showLabel, turnListButton, saveListTitle, createList, newListTitle, pos } = props;
+  const { createList, pos } = props;
   const id = useParams().boardId;
+  const [newListTitle, saveListTitle] = useState('');
+  const [showLabel, turnButton] = useState(true);
   if (showLabel) {
     return (
-      <div onClick={turnListButton} className="add_list_label">
+      <div onClick={(): void => turnButton(false)} className="add_list_label">
         <p>Новый список</p>
       </div>
     );
@@ -31,7 +33,7 @@ function AddListButton(props: CreatorProps): React.ReactElement {
         <button className="add_list_submit" onClick={(): void => createList(newListTitle, id || '', pos)}>
           Добавить
         </button>
-        <div onClick={turnListButton} className="delete_button" />
+        <div onClick={(): void => turnButton(true)} className="delete_button" />
       </div>
     </div>
   );

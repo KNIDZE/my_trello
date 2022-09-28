@@ -4,6 +4,7 @@
 const initialState = {
   showLabel: true,
   board: {lists: []},
+  cardText: '',
 };
 
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
@@ -26,8 +27,13 @@ export default function reducer(state = initialState, action: { type: string, pa
     case 'SAVE_LIST_TITLE':
       return {
         ...state,
-        newListTitle: action.payload
+        newListTitle: action.payload,
       };
+    case 'SAVE_CARD_TEXT':
+      return {
+        ...state,
+        cardText : action.payload,
+      }
     default: {
       return { ...state };
     }
