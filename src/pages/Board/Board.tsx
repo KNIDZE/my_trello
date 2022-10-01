@@ -39,6 +39,7 @@ function Board(props: AllBoardProps): JSX.Element {
           <h1
             className="table_title"
             contentEditable="true"
+            suppressContentEditableWarning
             data-ph="Ещё одна доска..."
             onBlur={(event): void => renameBoard(event.currentTarget.textContent || '', boardId || '')}
           >

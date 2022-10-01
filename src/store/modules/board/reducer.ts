@@ -34,6 +34,10 @@ export default function reducer(state = initialState, action: { type: string, pa
         ...state,
         cardText : action.payload,
       }
+    case 'CARD_TO_SLOT':
+      return {
+
+      }
     default: {
       return { ...state };
     }

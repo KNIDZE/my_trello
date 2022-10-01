@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { CardCreatorFunctions, turnCardCreator } from '../../../../store/modules/board/actions';
 
 function CardCreator(props: CreatorProps): React.ReactElement {
-  const { createCard, listId } = props;
+  const { createCard, listId, lastCardPos } = props;
   const { boardId } = useParams();
   const [showCreator, changeCreatorVisibility] = useState(false);
   const [cardText, saveCardText] = useState('');
@@ -17,12 +17,13 @@ function CardCreator(props: CreatorProps): React.ReactElement {
           className="create_card_textarea"
           onBlur={(e): void => saveCardText(e.currentTarget.value || '')}
           contentEditable="true"
+          suppressContentEditableWarning
         />
         <div className="button_panel">
           <button
             className="create_card_button"
             onClick={(): void => {
-              createCard(cardText, listId, boardId || '');
+              createCard(cardText, listId, boardId || '', lastCardPos + 1);
               changeCreatorVisibility(false);
             }}
           >
@@ -50,7 +51,11 @@ function mapStateToProps(state: { board: Props }): Props {
   };
 }
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const mergeProps = (stateProps: Props, dispatchProps: CardCreatorFunctions, ownProps: { listId: string }) => ({
+const mergeProps = (
+  stateProps: Props,
+  dispatchProps: CardCreatorFunctions,
+  ownProps: { listId: string; lastCardPos: number }
+) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,

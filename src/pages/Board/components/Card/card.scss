@@ -17,20 +17,31 @@
   padding: 0;
   margin: 0;
 }
+.card_box, .card, .card_slot{
+  height: 70px;
+  padding: 0;
+}
+.card_box{
+  width: 250px;
+  height: 80px;
+  margin-bottom: 15px;
+}
 .card{
-  min-height: 70px;
+  width: 230px;
+  padding: 0 2.5% 0 2.5%;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 75%;
   background-color: #bbdffd;
-  margin: 10px 0 10px 0;
-  padding: 0 2.5% 0 2.5%;
   border: 5px solid black;
   border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
 
 }
+
 .edit, .del_card{
   display: none;
   right: -15px;
@@ -51,4 +62,12 @@
 }
 .card:hover .edit, .card:hover .del_card{
   display: block;
+}
+.hidden{
+  display: none;
+}
+.dragImage{
+  position: absolute;
+  width: 230px;
+  padding: 0 2.5% 0 2.5%;
 }

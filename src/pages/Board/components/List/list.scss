@@ -1,5 +1,5 @@
 :root{
-  --card-color: #ED693B;
+  --list-color: #ED693B;
 }
 @keyframes showUp {
   0%{width: 0; height: 0}
@@ -7,7 +7,7 @@
 }
 .list{
   position: relative;
-  background-color: var(--card-color);
+  background-color: var(--list-color);
   width: 0;
   height: 0;
   animation: showUp 1s forwards;

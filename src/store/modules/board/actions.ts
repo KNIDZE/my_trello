@@ -113,11 +113,11 @@ export function boardFunctions(dispatch: Dispatch): { renameBoard(title: string,
   };
 }
 export interface CardCreatorFunctions {
-  createCard: (text: string, list_id: string, boardId: string) => void;
+  createCard: (text: string, list_id: string, boardId: string, position: number) => void;
 }
 export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
   return {
-    createCard: (text: string, list_id: string, boardId: string): void => {
+    createCard: (text: string, list_id: string, boardId: string, position: number): void => {
       if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
         // eslint-disable-next-line no-console
         console.log(text, list_id, boardId);
@@ -125,7 +125,7 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
           .post(`/board/${boardId}/card`, {
             title: text,
             list_id,
-            position: 0,
+            position,
             description: ' ',
             custom: '',
           })
