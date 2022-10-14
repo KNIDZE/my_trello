@@ -7,7 +7,8 @@ import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragEnterCard, dragStartHandler } from './dragNdrop';
 
 export default function Card(props: ICard): React.ReactElement {
-  const { title, id, listId } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { title, id } = props;
   const dispatch = useDispatch();
   const { boardId } = useParams();
   return (
@@ -18,7 +19,7 @@ export default function Card(props: ICard): React.ReactElement {
       onDragStart={(e): void => {
         dragStartHandler(e, title, id);
       }}
-      onDragEnter={(e): void => dragEnterCard(e, listId)}
+      onDragEnter={(e): void => dragEnterCard(e)}
     >
       <p className="inner_text">{title}</p>
       <div className="del_card" onClick={(): Promise<void> => delCard(dispatch, boardId || '', id)} />

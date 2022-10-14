@@ -63,23 +63,48 @@ function dropHandler(e: DragEvent): void {
 function removeExtraBox(): void {
   document.getElementById('extra_box')?.remove();
 }
+
 // adding extra box to given position
 function addExtraBox(): HTMLElement {
   const cardDiv = document.createElement('div');
   cardDiv.className = 'card_box';
-  cardDiv.id = 'extra_box';
-
+  cardDiv.id = `extra_box`;
+  cardDiv.addEventListener('dragenter', (event) => event.stopImmediatePropagation());
+  cardDiv.addEventListener('drop', (event) => {
+    dropHandler(event);
+  });
   function createSlot(): Element {
     const slot = document.createElement('div');
     slot.className = 'card_slot';
-    slot.addEventListener('drop', (event) => dropHandler(event));
     return slot;
   }
 
   cardDiv.appendChild(createSlot());
   return cardDiv;
 }
+export function dragEnterCard(e: React.DragEvent): void {
+  e.stopPropagation();
+  const listId = e.currentTarget.parentElement?.parentElement?.id;
+  const currentCard = e.currentTarget.getBoundingClientRect();
+  let upperElement = e.currentTarget.parentElement;
+  // eslint-disable-next-line no-console
+  console.log(listId);
+  const curList = document.getElementById(`${listId}`);
+  if (currentCard.y + currentCard.height / 2 < e.clientY && upperElement?.nextSibling !== null) {
+    // eslint-disable-next-line no-console
+    upperElement = upperElement?.nextSibling as HTMLElement;
+  }
+  if (upperElement?.id !== 'extra_box') {
+    // eslint-disable-next-line no-console
+    console.log(upperElement);
+    removeExtraBox();
+    curList?.insertBefore(addExtraBox(), upperElement);
+  }
+}
+
 export const dragEnterHandler = (e: React.DragEvent, id: number): void => {
+  // eslint-disable-next-line no-console
+  console.log('working');
   removeExtraBox();
   const curList = document.getElementById(`list_${id}`);
   const cardDiv = addExtraBox();
@@ -89,20 +114,3 @@ export const dragEnterHandler = (e: React.DragEvent, id: number): void => {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
 };
-export function dragEnterCard(e: React.DragEvent, listId: number): void {
-  const currentCard = e.currentTarget.getBoundingClientRect();
-  let upperElement = e.currentTarget.parentElement;
-  const curList = document.getElementById(`list_${listId}`);
-  if (currentCard.y + currentCard.height / 2 > e.clientY && upperElement?.nextSibling !== null) {
-    upperElement = upperElement?.nextSibling as HTMLElement;
-  }
-  const newExtraBox = addExtraBox();
-  // eslint-disable-next-line no-console
-  console.log(upperElement?.parentElement);
-  removeExtraBox();
-  try {
-    curList?.insertBefore(newExtraBox, upperElement);
-  } catch (event) {
-    curList?.insertBefore(newExtraBox, curList.lastChild);
-  }
-}
