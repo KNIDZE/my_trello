@@ -31,7 +31,8 @@ function Board(props: AllBoardProps): JSX.Element {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
     return (
-      <section className="board_section">
+      // eslint-disable-next-line no-alert
+      <section className="board_section" onDrop={(): void => alert('DIIICH')}>
         <div className="table_title_div">
           <Link className="link_home" to="/">
             <button className="home">Домой</button>

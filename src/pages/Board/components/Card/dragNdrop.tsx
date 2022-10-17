@@ -23,9 +23,6 @@ export const dragStartHandler = (e: React.DragEvent, title: string, id: number):
     card?.classList.add('hidden');
     box?.classList.add('hidden');
   }, 0);
-  // set div to box
-  // eslint-disable-next-line no-console
-  console.log(e);
 };
 // export const dragLeaveHandler = (id: number): void => {
 //   const box = document.getElementById(`card_box_${id}`);
@@ -33,6 +30,7 @@ export const dragStartHandler = (e: React.DragEvent, title: string, id: number):
 //   // eslint-disable-next-line no-console
 //   console.log('worked');
 // };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function hasExtraCard(list: HTMLElement): boolean {
   let child;
   for (let i = 0; i < list.children.length; i++) {
@@ -45,7 +43,9 @@ function hasExtraCard(list: HTMLElement): boolean {
   }
   return false;
 }
-function dropHandler(e: DragEvent): void {
+export function dropHandler(e: DragEvent): void {
+  // eslint-disable-next-line no-console
+  console.log('working');
   const dragCardId = e.dataTransfer?.getData('html/plain') || '';
   const newPosition = document.getElementById('extra_box');
   const card = document.getElementById(dragCardId);
@@ -56,11 +56,10 @@ function dropHandler(e: DragEvent): void {
     if (card.lastChild) card.removeChild(card.lastChild);
     newPosition.appendChild(card);
     newPosition.id = `card_box_${dragCardId}`;
-    // newPosition.addEventListener('dragleave', () => dragLeaveHandler(+dragCardId));
     card.classList.remove('hidden');
   }
 }
-function removeExtraBox(): void {
+export function removeExtraBox(): void {
   document.getElementById('extra_box')?.remove();
 }
 
@@ -69,7 +68,6 @@ function addExtraBox(): HTMLElement {
   const cardDiv = document.createElement('div');
   cardDiv.className = 'card_box';
   cardDiv.id = `extra_box`;
-  cardDiv.addEventListener('dragenter', (event) => event.stopImmediatePropagation());
   cardDiv.addEventListener('drop', (event) => {
     dropHandler(event);
   });
@@ -82,35 +80,39 @@ function addExtraBox(): HTMLElement {
   cardDiv.appendChild(createSlot());
   return cardDiv;
 }
-export function dragEnterCard(e: React.DragEvent): void {
-  e.stopPropagation();
-  const listId = e.currentTarget.parentElement?.parentElement?.id;
-  const currentCard = e.currentTarget.getBoundingClientRect();
-  let upperElement = e.currentTarget.parentElement;
-  // eslint-disable-next-line no-console
-  console.log(listId);
-  const curList = document.getElementById(`${listId}`);
-  if (currentCard.y + currentCard.height / 2 < e.clientY && upperElement?.nextSibling !== null) {
-    // eslint-disable-next-line no-console
-    upperElement = upperElement?.nextSibling as HTMLElement;
-  }
-  if (upperElement?.id !== 'extra_box') {
-    // eslint-disable-next-line no-console
-    console.log(upperElement);
-    removeExtraBox();
-    curList?.insertBefore(addExtraBox(), upperElement);
-  }
-}
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const dragEnterHandler = (e: React.DragEvent, id: number): void => {
-  // eslint-disable-next-line no-console
-  console.log('working');
+  const listChildren = e.currentTarget.children;
   removeExtraBox();
+  const lastElementRect = listChildren[e.currentTarget.children.length - 1].getBoundingClientRect();
   const curList = document.getElementById(`list_${id}`);
-  const cardDiv = addExtraBox();
-  if (curList !== null && !hasExtraCard(curList)) {
-    curList.insertBefore(cardDiv, curList.lastChild);
+  if (e.clientY > lastElementRect.y) {
+    if (curList !== null && !hasExtraCard(curList)) {
+      const cardDiv = addExtraBox();
+      curList.insertBefore(cardDiv, curList.lastChild);
+    }
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  } else {
+    e.preventDefault();
+    for (let i = 2; i < listChildren.length - 1; i++) {
+      const prevChildCenter =
+        listChildren[i - 1].getBoundingClientRect().y + listChildren[i - 1].getBoundingClientRect().height / 2;
+      const thisChildCenter =
+        listChildren[i].getBoundingClientRect().y + listChildren[i].getBoundingClientRect().height / 2;
+      const nextChildCenter =
+        listChildren[i + 1].getBoundingClientRect().y + listChildren[i + 1].getBoundingClientRect().height / 2;
+      if (prevChildCenter < e.clientY && e.clientY < thisChildCenter) {
+        if (curList !== null && !hasExtraCard(curList)) {
+          const cardDiv = addExtraBox();
+          curList.insertBefore(cardDiv, listChildren[i]);
+        }
+      } else if (e.clientY < nextChildCenter && e.clientY > thisChildCenter) {
+        if (curList !== null && !hasExtraCard(curList)) {
+          const cardDiv = addExtraBox();
+          curList.insertBefore(cardDiv, listChildren[i + 1]);
+        }
+      }
+    }
   }
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
 };
