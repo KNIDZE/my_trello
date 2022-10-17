@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useDispatch } from 'react-redux';
 import { ICard } from '../../common/interfaces/ICard.t';
 import './board.scss';
 import List from './components/List/List';
 import AddListButton from './components/addListButton/AddListButton';
 import { boardFunctions } from '../../store/modules/board/actions';
 import Loading from '../Home/components/Loading/Loading';
+import { dropHandler } from './components/Card/dragNdrop';
 
 interface BoardInterface {
   title: string;
@@ -27,12 +28,22 @@ function Board(props: AllBoardProps): JSX.Element {
   let renderList;
   const { board, renameBoard } = props;
   const { boardId } = useParams();
+  const dispatch = useDispatch();
   if (typeof board.title !== undefined && board.title !== '') {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
     return (
       // eslint-disable-next-line no-alert
-      <section className="board_section" onDrop={(): void => alert('DIIICH')}>
+      <section
+        className="board_section"
+        onDragOver={(e): void => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onDrop={(e): void => {
+          dropHandler(e, `${boardId}`, dispatch);
+        }}
+      >
         <div className="table_title_div">
           <Link className="link_home" to="/">
             <button className="home">Домой</button>

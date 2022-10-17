@@ -130,7 +130,6 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
             custom: '',
           })
           // eslint-disable-next-line no-console
-          .then((value) => console.log(value))
           .then(() => getBoard()(dispatch, boardId));
       } else {
         // eslint-disable-next-line no-alert
@@ -150,30 +149,25 @@ export async function delCard(dispatch: Dispatch, boardId: string, cardId: numbe
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
-export async function changeCard(
-  dispatch: Dispatch,
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function updateCards(
   boardId: string,
-  cardId: number,
-  listId: number,
-  title: string
-): Promise<void> {
-  if (title.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
-    try {
-      await api
-        .put(`/board/${boardId}/card/${cardId}`, {
-          title,
-          description: ' ',
-          list_id: listId,
-        })
-        .then(() => {
-          getBoard()(dispatch, boardId);
-        });
-    } catch (e) {
+  cards: HTMLCollection | undefined,
+  listId: string | undefined,
+  dispatch: Dispatch
+): void {
+  try {
+    const objectList = [];
+    if (cards !== undefined) {
+      for (let i = 2; i < cards.length - 1; i++) {
+        objectList.push({ id: cards[i].id.slice(9), position: i - 1, list_id: listId?.slice(5) });
+      }
       // eslint-disable-next-line no-console
-      console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      api.put(`/board/${boardId}/card`, objectList).then((callback) => console.log(callback));
+      dispatch({ type: 'LOAD_BOARD' });
     }
-  } else {
-    creationError();
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(e);
   }
 }
