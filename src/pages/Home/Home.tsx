@@ -6,7 +6,7 @@ import { getBoards } from '../../store/modules/boards/actions';
 import './home.scss';
 import { IBoard } from '../../common/interfaces/IBoard';
 import BoardCreator from './components/BoardCreator/BoardCreator';
-import { getBoard } from '../../store/modules/board/actions';
+import { getCurrentBoard } from '../../store/modules/board/actions';
 import Loading from './components/Loading/Loading';
 
 type PropsType = {
@@ -22,7 +22,7 @@ function Home({ boards }: PropsType): React.ReactElement {
     boardsList = boards.map((key) => (
       <Link
         onClick={(): void => {
-          getBoard()(dispatch, `${key.id}`);
+          getCurrentBoard(dispatch, `${key.id}`);
         }}
         className="home_link"
         key={key.id}

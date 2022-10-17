@@ -19,6 +19,10 @@ export default function reducer(state = initialState, action: { type: string, pa
       return {
         ...state,
       };
+    case 'SET_CURRENT_CARD':
+      return {
+        ...state, currentBoardId: action.payload
+      }
     case 'CLEAR_BOARD':
       return {
         ...state,

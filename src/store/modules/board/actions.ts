@@ -16,21 +16,18 @@ function changeListsPosition(board: Board): { id: number; position: number }[] {
   return result;
 }
 
-export const getBoard =
-  () =>
-  async (dispatch: Dispatch, id: string): Promise<void> => {
-    try {
-      let board: Board = await api.get(`/board/${id}`);
-      await api.put(`/board/${id}/list`, changeListsPosition(board));
-      board = await api.get(`/board/${id}`);
-      await dispatch({ type: 'LOAD_BOARD', payload: board });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
-    }
-  };
-
+export async function getBoard(dispatch: Dispatch, id: string): Promise<void> {
+  try {
+    let board: Board = await api.get(`/board/${id}`);
+    await api.put(`/board/${id}/list`, changeListsPosition(board));
+    board = await api.get(`/board/${id}`);
+    await dispatch({ type: 'LOAD_BOARD', payload: board });
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(e);
+    dispatch({ type: 'ERROR_ACTION_TYPE' });
+  }
+}
 interface BoardElements {
   createList: (title: string, id: string, position: number) => void;
 }
@@ -57,7 +54,7 @@ export function addBoardElements(dispatch: Dispatch): BoardElements {
   return {
     createList: (title, id, position): void => {
       if (isStringValid(title)) {
-        addNewList(title, id, position, dispatch).then(() => getBoard()(dispatch, id));
+        addNewList(title, id, position, dispatch).then(() => getBoard(dispatch, id));
       } else {
         creationError();
       }
@@ -67,7 +64,7 @@ export function addBoardElements(dispatch: Dispatch): BoardElements {
 
 export async function delList(dispatch: Dispatch, boardId: string, listId: string): Promise<void> {
   try {
-    await api.delete(`/board/${boardId}/list/${listId}`).then(() => getBoard()(dispatch, boardId));
+    await api.delete(`/board/${boardId}/list/${listId}`).then(() => getBoard(dispatch, boardId));
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
@@ -81,7 +78,7 @@ export async function renameList(dispatch: Dispatch, title: string, listId: stri
       await api.put(`/board/${boardId}/list/${listId}`, {
         title,
       });
-      getBoard()(dispatch, boardId);
+      getBoard(dispatch, boardId);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
@@ -98,7 +95,7 @@ function renameRequest(title: string, boardId: string, dispatch: Dispatch): void
       title,
       custom: {},
     })
-    .then(() => getBoard()(dispatch, boardId));
+    .then(() => getBoard(dispatch, boardId));
 }
 
 export function boardFunctions(dispatch: Dispatch): { renameBoard(title: string, boardId: string): void } {
@@ -111,6 +108,9 @@ export function boardFunctions(dispatch: Dispatch): { renameBoard(title: string,
       }
     },
   };
+}
+export function getCurrentBoard(dispatch: Dispatch, boardId: string): void {
+  dispatch({ type: 'SET_CURRENT_CARD', payload: boardId });
 }
 export interface CardCreatorFunctions {
   createCard: (text: string, list_id: string, boardId: string, position: number) => void;
@@ -130,7 +130,7 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
             custom: '',
           })
           // eslint-disable-next-line no-console
-          .then(() => getBoard()(dispatch, boardId));
+          .then(() => getBoard(dispatch, boardId));
       } else {
         // eslint-disable-next-line no-alert
         alert('Wrong Text!');
@@ -141,7 +141,7 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
 export async function delCard(dispatch: Dispatch, boardId: string, cardId: number): Promise<void> {
   try {
     await api.delete(`/board/${boardId}/card/${cardId}`).then(() => {
-      getBoard()(dispatch, boardId);
+      getBoard(dispatch, boardId);
     });
   } catch (e) {
     // eslint-disable-next-line no-console

@@ -5,7 +5,7 @@ import { ICard } from '../../common/interfaces/ICard.t';
 import './board.scss';
 import List from './components/List/List';
 import AddListButton from './components/addListButton/AddListButton';
-import { boardFunctions } from '../../store/modules/board/actions';
+import { boardFunctions, getBoard } from '../../store/modules/board/actions';
 import Loading from '../Home/components/Loading/Loading';
 import { dropHandler } from './components/Card/dragNdrop';
 
@@ -24,12 +24,14 @@ interface BoardProps {
   };
 }
 function Board(props: AllBoardProps): JSX.Element {
-  let title;
-  let renderList;
   const { board, renameBoard } = props;
   const { boardId } = useParams();
   const dispatch = useDispatch();
-  if (typeof board.title !== undefined && board.title !== '') {
+  let title;
+  let renderList;
+  // eslint-disable-next-line no-console
+  console.log(board);
+  if (board.title) {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
     return (
@@ -67,6 +69,9 @@ function Board(props: AllBoardProps): JSX.Element {
       </section>
     );
   }
+  // eslint-disable-next-line no-console
+  console.log('working');
+  getBoard(dispatch, boardId || '');
   return <Loading />;
 }
 const mapStateToProps = (state: BoardState): BoardProps => ({
