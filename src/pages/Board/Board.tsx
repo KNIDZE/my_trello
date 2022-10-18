@@ -8,6 +8,7 @@ import AddListButton from './components/addListButton/AddListButton';
 import { boardFunctions, getBoard } from '../../store/modules/board/actions';
 import Loading from '../Home/components/Loading/Loading';
 import { dropHandler } from './components/Card/dragNdrop';
+import { CardModal } from './components/Card/CardModal/CardModal';
 
 interface BoardInterface {
   title: string;
@@ -25,12 +26,13 @@ interface BoardProps {
 }
 function Board(props: AllBoardProps): JSX.Element {
   const { board, renameBoard } = props;
-  const { boardId } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { boardId, cardId } = useParams();
   const dispatch = useDispatch();
   let title;
   let renderList;
   // eslint-disable-next-line no-console
-  console.log(board);
+  console.log(cardId);
   if (board.title) {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
@@ -66,11 +68,10 @@ function Board(props: AllBoardProps): JSX.Element {
             <AddListButton />
           </div>
         </div>
+        {cardId && <CardModal />}
       </section>
     );
   }
-  // eslint-disable-next-line no-console
-  console.log('working');
   getBoard(dispatch, boardId || '');
   return <Loading />;
 }

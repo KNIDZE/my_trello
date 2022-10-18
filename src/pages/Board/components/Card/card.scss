@@ -1,3 +1,6 @@
+:root{
+  --card-color:  #bbdffd;
+}
 .inner_text{
   font-size: 18px;
   resize: none;
@@ -33,14 +36,10 @@
   width: 230px;
   padding: 0 2.5% 0 2.5%;
   height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
-  background-color: #bbdffd;
+  background-color: var(--card-color);
   border: 5px solid black;
   border-radius: 20px;
-  cursor: pointer;
   user-select: none;
 
 }
@@ -64,9 +63,9 @@
   background-color: var(--delete-color);
 
 }
-.card:hover .edit, .card:hover .del_card{
-  display: block;
-}
+//.card:hover .edit, .card:hover .del_card{
+//  display: block;
+//}
 .hidden{
   display: none;
 }
@@ -74,4 +73,11 @@
   position: absolute;
   width: 230px;
   padding: 0 2.5% 0 2.5%;
+}
+.card_link{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

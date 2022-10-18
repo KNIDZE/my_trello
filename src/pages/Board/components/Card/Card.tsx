@@ -1,7 +1,7 @@
 import React from 'react';
 import './card.scss';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { delCard } from '../../../../store/modules/board/actions';
 import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
@@ -20,8 +20,10 @@ export default function Card(props: ICard): React.ReactElement {
         dragStartHandler(e, title, id);
       }}
     >
-      <p className="inner_text">{title}</p>
-      <div className="del_card" onClick={(): Promise<void> => delCard(dispatch, boardId || '', id)} />
+      <Link className="card_link" to={`card/${id}`}>
+        <p className="inner_text">{title}</p>
+        <div className="del_card" onClick={(): Promise<void> => delCard(dispatch, boardId || '', id)} />
+      </Link>
     </div>
   );
 }
