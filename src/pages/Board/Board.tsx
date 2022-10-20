@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { connect, ConnectedProps, useDispatch } from 'react-redux';
-import { ICard } from '../../common/interfaces/ICard.t';
 import './board.scss';
 import List from './components/List/List';
 import AddListButton from './components/addListButton/AddListButton';
@@ -9,10 +8,11 @@ import { boardFunctions, getBoard } from '../../store/modules/board/actions';
 import Loading from '../Home/components/Loading/Loading';
 import { dropHandler } from './components/Card/dragNdrop';
 import { CardModal } from './components/Card/CardModal/CardModal';
+import IList from '../../common/interfaces/IList';
 
 interface BoardInterface {
   title: string;
-  lists: Array<{ id: number; title: string; cards: ICard[] }>;
+  lists: IList[];
 }
 interface BoardState {
   board: { board: BoardInterface };
@@ -21,7 +21,7 @@ interface BoardState {
 interface BoardProps {
   board: {
     title: string;
-    lists: Array<{ id: number; title: string; cards: ICard[] }>;
+    lists: IList[];
   };
 }
 function Board(props: AllBoardProps): JSX.Element {
@@ -31,8 +31,6 @@ function Board(props: AllBoardProps): JSX.Element {
   const dispatch = useDispatch();
   let title;
   let renderList;
-  // eslint-disable-next-line no-console
-  console.log(cardId);
   if (board.title) {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
@@ -68,7 +66,7 @@ function Board(props: AllBoardProps): JSX.Element {
             <AddListButton />
           </div>
         </div>
-        {cardId && <CardModal />}
+        {cardId && <CardModal lists={board.lists} />}
       </section>
     );
   }

@@ -12,7 +12,7 @@ function App(): React.ReactElement {
         <Router>
           <Routes>
             <Route path="/board/:boardId" element={<Board />}>
-              <Route path="card/:cardId" element={<CardModal />} />
+              <Route path="card/:cardId" element={<CardModal lists={[]} />} />
             </Route>
             <Route path="/" element={<Home />} />
           </Routes>

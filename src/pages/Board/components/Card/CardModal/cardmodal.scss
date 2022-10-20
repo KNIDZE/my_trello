@@ -9,7 +9,7 @@ h6{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(20,20,20,0.7);
+  background-color: rgba(20,20,20,0.2);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,10 +20,10 @@ h6{
   width: 750px;
   height: 500px;
   background-color: #c3d3ff;
-  border: var(--card-color);
-  border-color: #00568c;
+  border: 5px solid #003d69;
   border-radius: 20px;
   position: relative;
+  box-shadow: 0 0 20px 2px black;
 }
 .card_modal p{
   margin: 10px 0 10px 0;

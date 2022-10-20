@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dispatch } from 'redux';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateCards } from '../../../../store/modules/board/actions';
 
 const transferData = {
@@ -39,19 +40,22 @@ function hasExtraCard(listChildren: HTMLCollection): boolean {
   }
   return false;
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function dropHandler(e: DragEvent | React.DragEvent, boardId: string, dispatch: Dispatch): void {
   const dragCardId = e.dataTransfer?.getData('html/plain') || '';
   const newPosition = document.getElementById('extra_box');
   const card = document.getElementById(dragCardId);
   if (newPosition !== null && card !== null) {
-    const previousCardBox = document.getElementById(`card_box_${dragCardId}`);
-    if (previousCardBox) previousCardBox.remove();
+    // const previousCardBox = document.getElementById(`card_box_${dragCardId}`);
+    // if (previousCardBox) previousCardBox.remove();
     // remove dragImage
     if (card.lastChild) card.removeChild(card.lastChild);
-    newPosition.appendChild(card);
+    const cardClone = card.cloneNode(true) as HTMLElement;
+    // newPosition.appendChild(cardClone);
     newPosition.id = `card_box_${dragCardId}`;
-    card.classList.remove('hidden');
+    cardClone.classList.remove('hidden');
     updateCards(boardId, newPosition.parentElement?.children, newPosition.parentElement?.id, dispatch);
+    newPosition.remove();
   }
 }
 export function removeExtraBox(): void {

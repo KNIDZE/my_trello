@@ -17,7 +17,7 @@ export default function List(props: { title: string; cards: ICard[]; id: number 
   const cardsList = cards.sort(comparePositionCard).map((key) => (
     <div key={key.id} className="card_box" id={`card_box_${key.id}`}>
       <Slot id={key.id} />
-      <Card title={key.title} id={key.id} listId={id} position={key.position} />
+      <Card title={key.title} id={key.id} listId={id} position={key.position} description={key.description} />
     </div>
   ));
   return (

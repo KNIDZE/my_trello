@@ -1,6 +1,10 @@
 :root{
   --card-color:  #bbdffd;
 }
+@keyframes showUpCard {
+  0%{opacity: 0}
+  100%{opacity: 1}
+}
 .inner_text{
   font-size: 18px;
   resize: none;
@@ -33,6 +37,7 @@
   margin-bottom: 15px;
 }
 .card{
+  animation: showUpCard 1s forwards;
   width: 230px;
   padding: 0 2.5% 0 2.5%;
   height: 70px;

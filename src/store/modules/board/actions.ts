@@ -138,7 +138,7 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
     },
   };
 }
-export async function delCard(dispatch: Dispatch, boardId: string, cardId: number): Promise<void> {
+export async function delCard(dispatch: Dispatch, boardId: string, cardId: string): Promise<void> {
   try {
     await api.delete(`/board/${boardId}/card/${cardId}`).then(() => {
       getBoard(dispatch, boardId);
@@ -162,9 +162,8 @@ export function updateCards(
       for (let i = 2; i < cards.length - 1; i++) {
         objectList.push({ id: cards[i].id.slice(9), position: i - 1, list_id: listId?.slice(5) });
       }
-      // eslint-disable-next-line no-console
-      api.put(`/board/${boardId}/card`, objectList).then((callback) => console.log(callback));
-      dispatch({ type: 'LOAD_BOARD' });
+      api.put(`/board/${boardId}/card`, objectList);
+      getBoard(dispatch, boardId);
     }
   } catch (e) {
     // eslint-disable-next-line no-console
