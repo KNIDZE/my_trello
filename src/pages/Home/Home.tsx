@@ -8,6 +8,7 @@ import { IBoard } from '../../common/interfaces/IBoard';
 import BoardCreator from './components/BoardCreator/BoardCreator';
 import { getCurrentBoard } from '../../store/modules/board/actions';
 import Loading from './components/Loading/Loading';
+import { LogOut } from '../../common/LogOut/LogOut';
 
 type PropsType = {
   boards: IBoard[];
@@ -33,7 +34,8 @@ function Home({ boards }: PropsType): React.ReactElement {
     ));
     return (
       <section className="home" id="home_section">
-        <h1 className="home_title">Мои доски</h1>
+        <LogOut />
+        <h1 className="home_title">My boards</h1>
         <div className="container">
           {boardsList}
           <BoardCreator />

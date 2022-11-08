@@ -9,6 +9,7 @@ import Loading from '../Home/components/Loading/Loading';
 import { dropHandler } from './components/Card/dragNdrop';
 import { CardModal } from './components/Card/CardModal/CardModal';
 import IList from '../../common/interfaces/IList';
+import { LogOut } from '../../common/LogOut/LogOut';
 
 interface BoardInterface {
   title: string;
@@ -35,7 +36,6 @@ function Board(props: AllBoardProps): JSX.Element {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
     return (
-      // eslint-disable-next-line no-alert
       <section
         className="board_section"
         onDragOver={(e): void => {
@@ -46,9 +46,10 @@ function Board(props: AllBoardProps): JSX.Element {
           dropHandler(e, `${boardId}`, dispatch);
         }}
       >
+        <LogOut />
         <div className="table_title_div">
           <Link className="link_home" to="/">
-            <button className="home">Домой</button>
+            <button className="home">Home</button>
           </Link>
           <h1
             className="table_title"

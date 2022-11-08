@@ -37,7 +37,7 @@
   margin-bottom: 15px;
 }
 .card{
-  animation: showUpCard 1s forwards;
+  animation: showUpCard 0.5s forwards ease-in;
   width: 230px;
   padding: 0 2.5% 0 2.5%;
   height: 70px;

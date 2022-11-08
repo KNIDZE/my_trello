@@ -7,7 +7,7 @@ export default function BoardCreator(): JSX.Element {
     return (
       <div>
         <div onClick={(): void => changeCreatorsVisibility(false)} className="add_board board">
-          <b>+ Добавить таблицу</b>
+          <b>+ Add board</b>
         </div>
         <BoardCreatorModule />
       </div>
@@ -15,7 +15,7 @@ export default function BoardCreator(): JSX.Element {
   }
   return (
     <div onClick={(): void => changeCreatorsVisibility(true)} className="add_board board">
-      <b>+ Добавить доску</b>
+      <b>+ Add board</b>
     </div>
   );
 }

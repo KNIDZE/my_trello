@@ -8,10 +8,6 @@ export const config: AxiosRequestConfig = {
     // eslint-disable-next-line no-console
     console.log(`load:${percentCompleted}`);
   },
-  onDownloadProgress(event: ProgressEvent) {
-    // eslint-disable-next-line no-console
-    console.log(event.total);
-  },
 };
 
 export const getBoards =

@@ -3,15 +3,7 @@ import { Dispatch } from 'redux';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateCards } from '../../../../store/modules/board/actions';
 
-const transferData = {
-  data: {
-    title: '',
-    id: 0,
-  },
-};
-
 export const dragStartHandler = (e: React.DragEvent, title: string, id: number): void => {
-  transferData.data = { title, id };
   e.dataTransfer.setData('html/plain', e.currentTarget.id);
   e.dataTransfer.effectAllowed = 'all';
   // create dragImage

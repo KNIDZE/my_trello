@@ -22,16 +22,16 @@ function AddListButton(props: CreatorProps): React.ReactElement {
   if (showLabel) {
     return (
       <div onClick={(): void => turnButton(false)} className="add_list_label">
-        <p>Новый список</p>
+        <p>New list</p>
       </div>
     );
   }
   return (
     <div className="add_list_form">
-      <input onBlur={(event): void => saveListTitle(event.currentTarget.value)} placeholder="Введите название" />
+      <input onBlur={(event): void => saveListTitle(event.currentTarget.value)} placeholder="enter title" />
       <div className="button_panel">
         <button className="add_list_submit" onClick={(): void => createList(newListTitle, id || '', pos)}>
-          Добавить
+          Add
         </button>
         <div onClick={(): void => turnButton(true)} className="delete_button" />
       </div>

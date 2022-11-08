@@ -27,7 +27,7 @@ function CardCreator(props: CreatorProps): React.ReactElement {
               changeCreatorVisibility(false);
             }}
           >
-            Создать
+            Create
           </button>
           <div className="delete_button" onClick={(): void => changeCreatorVisibility(false)} />
         </div>
