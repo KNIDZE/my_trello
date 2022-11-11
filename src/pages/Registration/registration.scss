@@ -1,3 +1,4 @@
+
 .registration_area{
   width: 25%;
   min-width: 300px;
@@ -8,4 +9,27 @@
 }
 .warning{
   color: #ED8C6B;
+}
+
+.registration_trans-appear {
+  transform: translate(0, -100vh);
+}
+.registration_trans-appear-active {
+  transform: translate(0, -50vh);
+  transition: transform 500ms ease-in-out;
+}
+.registration_trans-appear-done {
+  transform: translate(0, 0px);
+  transition: transform 500ms ease-in-out;
+}
+.registration_trans-exit {
+  transform: translate(0, 0);
+}
+.registration_trans-exit-active{
+  transform: translate(20px, 0px);
+  transition: transform ease-out 200ms ;
+}
+.registration_trans-exit-done{
+  transform: translate(-100vw, 0);
+  transition: transform ease-in 300ms ;
 }

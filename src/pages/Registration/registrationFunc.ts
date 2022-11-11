@@ -70,8 +70,6 @@ function hasAccount(): void {
   }
 }
 function registration(email: string, password: string, navigate: NavigateFunction): void {
-  // eslint-disable-next-line no-console
-  console.log(email, password);
   api
     .post('/user', {
       email,
@@ -81,12 +79,12 @@ function registration(email: string, password: string, navigate: NavigateFunctio
       if (e.data?.error === 'User already exists') {
         hasAccount();
       } else {
-        logIn(navigate, email, password);
+        logIn(email, password);
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
       }
     });
-
-  // eslint-disable-next-line no-console
-  // hasAccount();
 }
 
 export function signUp(allowed: Array<boolean>, email: string, password: string, navigate: NavigateFunction): void {

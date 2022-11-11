@@ -6,8 +6,8 @@ export function goSignUp(navigate: NavigateFunction): void {
   navigate('/registration');
 }
 
-export function logIn(navigate: NavigateFunction, email: string, password: string): void {
-  api
+export async function logIn(email: string, password: string): Promise<boolean> {
+  return api
     .post('/login', { email, password })
     .then((response) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -17,10 +17,16 @@ export function logIn(navigate: NavigateFunction, email: string, password: strin
       // @ts-ignore
       localStorage.setItem('refresh_token', response.refreshToken);
       getBoards();
-      setTimeout(() => {
-        navigate('/');
-      }, 200);
+      return true;
     })
-    // eslint-disable-next-line no-console
-    .catch((err) => console.log(err));
+    .catch(() => {
+      if (document.getElementsByClassName('warning')[0] == null) {
+        const form = document.getElementsByClassName('login_form')[0];
+        const warning = document.createElement('p');
+        warning.innerHTML = 'This profile does not exist';
+        warning.className = 'warning';
+        form.insertBefore(warning, document.getElementById('password_label'));
+      }
+      return false;
+    });
 }

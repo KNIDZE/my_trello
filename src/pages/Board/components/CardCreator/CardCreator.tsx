@@ -9,7 +9,6 @@ function CardCreator(props: CreatorProps): React.ReactElement {
   const { boardId } = useParams();
   const [showCreator, changeCreatorVisibility] = useState(false);
   const [cardText, saveCardText] = useState('');
-  // eslint-disable-next-line no-console
   if (showCreator) {
     return (
       <div className="card_creator">

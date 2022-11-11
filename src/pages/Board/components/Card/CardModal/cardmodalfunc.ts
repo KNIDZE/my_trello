@@ -30,8 +30,6 @@ export function saveDescription(
   dispatch: Dispatch
 ): void {
   try {
-    // eslint-disable-next-line no-console
-    console.log(title, description, list_id);
     api
       .put(`/board/${boardId}/card/${cardId}`, {
         title,

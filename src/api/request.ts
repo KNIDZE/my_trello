@@ -26,20 +26,7 @@ instance.interceptors.response.use(
       localStorage.setItem('is_auth', 'false');
       return (window.location.href = '/login');
     }
-    if (error.response.status === 400) {
-      // eslint-disable-next-line no-restricted-globals
-      const curUrl = location.href;
-      if (curUrl.slice(curUrl.length - 6, curUrl.length) === '/login') {
-        const form = document.getElementsByClassName('login_form')[0];
-        const warning = document.createElement('p');
-        warning.innerHTML = 'This profile does not exist';
-        warning.className = 'warning';
-        form.append(warning);
-      }
-    }
-    // eslint-disable-next-line no-console
-    console.log(error);
-    return error.response;
+    throw error;
   }
 );
 export default instance;

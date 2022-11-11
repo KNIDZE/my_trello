@@ -119,8 +119,6 @@ export function turnCardCreator(dispatch: Dispatch): CardCreatorFunctions {
   return {
     createCard: (text: string, list_id: string, boardId: string, position: number): void => {
       if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
-        // eslint-disable-next-line no-console
-        console.log(text, list_id, boardId);
         api
           .post(`/board/${boardId}/card`, {
             title: text,
@@ -168,5 +166,15 @@ export function updateCards(
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
+  }
+}
+export function renameCard(text: string, boardId: string, cardId: number, list_id: string, dispatch: Dispatch): void {
+  // eslint-disable-next-line no-console
+  if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
+    api.put(`/board/${boardId}/card/${cardId}`, {
+      title: text,
+      list_id,
+    });
+    getBoard(dispatch, boardId);
   }
 }

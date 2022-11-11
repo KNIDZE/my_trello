@@ -55,7 +55,7 @@ function Board(props: AllBoardProps): JSX.Element {
             className="table_title"
             contentEditable="true"
             suppressContentEditableWarning
-            data-ph="Ещё одна доска..."
+            data-ph="One more board..."
             onBlur={(event): void => renameBoard(event.currentTarget.textContent || '', boardId || '')}
           >
             {title}

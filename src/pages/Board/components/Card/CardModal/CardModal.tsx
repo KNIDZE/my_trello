@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { changeDescription, closeOnEscape, copyText, returnOnBoard, saveDescription } from './cardmodalfunc';
 import IList from '../../../../../common/interfaces/IList';
 import { findListCard } from '../../../../../common/commonFunctions';
-import { delCard } from '../../../../../store/modules/board/actions';
+import { delCard, renameCard } from '../../../../../store/modules/board/actions';
 
 export function CardModal(props: { lists: IList[] }): ReactElement {
   const navigate = useNavigate();
@@ -29,11 +29,20 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
     <div
       className="card_modal_area"
       onClick={(): void => returnOnBoard(boardId || '', navigate)}
-      onKeyPress={(e): void => closeOnEscape(e.key, boardId || '', navigate)}
+      onKeyUp={(e): void => closeOnEscape(e.key, boardId || '', navigate)}
     >
       <div className="card_modal" onClick={(e): void => e.stopPropagation()}>
         <div className="delete_button" onClick={(): void => returnOnBoard(boardId || '', navigate)} />
-        <h6>{card?.title}</h6>
+        <h6
+          contentEditable="true"
+          suppressContentEditableWarning
+          data-ph="One more card..."
+          onBlur={(event): void =>
+            renameCard(event.currentTarget.textContent || '', boardId || '', card?.id || 0, list.id, dispatch)
+          }
+        >
+          {card?.title}
+        </h6>
         <p>
           In <span>{list.title}</span> list
         </p>

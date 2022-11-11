@@ -1,3 +1,5 @@
+$animation-time: 300ms;
+$out-animation-time: 500ms;
 .login_section, .registration_section{
   width: 100%;
   height: 100vh;
@@ -62,4 +64,28 @@
   margin-left: 10px;
   color: #318BC6;
   text-decoration: underline;
+}
+.login_trans-appear {
+  opacity: 0;
+}
+.login_trans-appear-active {
+  opacity: 1;
+  transition: opacity $animation-time ease-in-out;
+}
+.login_trans-appear-done {
+  opacity: 1;
+}
+.login_trans-exit {
+  transform: translate(0, 0);
+}
+.login_trans-exit{
+  transform: translate(0,0);
+}
+.login_trans-exit-active{
+  transform: translate(0, 20px);
+  transition: transform ease-out 200ms ;
+}
+.login_trans-exit-done{
+  transform: translate(0, -100vh);
+  transition: transform ease-in ($out-animation-time -100ms) ;
 }
