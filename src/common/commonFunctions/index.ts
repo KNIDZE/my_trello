@@ -32,3 +32,10 @@ export function findListCard(lists: IList[], id: string): { card: ICard | undefi
     },
   };
 }
+
+export function notValidString(string: string, putElementId: string): void {
+  const element = document.getElementById(putElementId);
+  if (element !== null) {
+    element.innerHTML = string === '' ? "String shouldn't be empty" : 'String must contain only letters, numbers, -, _';
+  }
+}

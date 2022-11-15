@@ -5,7 +5,11 @@ import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
 
 export default function Card(props: ICard): React.ReactElement {
-  const { title, id } = props;
+  let { title } = props;
+  const { id } = props;
+  if (title.length > 30) {
+    title = `${title.slice(0, 25)}...`;
+  }
   return (
     <div
       id={id.toString()}

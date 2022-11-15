@@ -28,8 +28,12 @@ function AddListButton(props: CreatorProps): React.ReactElement {
   }
   return (
     <div className="add_list_form">
-      <input onBlur={(event): void => saveListTitle(event.currentTarget.value)} placeholder="enter title" />
-      <div className="button_panel">
+      <input
+        id="add_list_form"
+        onBlur={(event): void => saveListTitle(event.currentTarget.value)}
+        placeholder="enter title"
+      />
+      <div className="button_panel" id="list_creation_panel">
         <button className="add_list_submit" onClick={(): void => createList(newListTitle, id || '', pos)}>
           Add
         </button>

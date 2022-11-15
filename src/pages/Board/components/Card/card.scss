@@ -15,6 +15,7 @@
   background-color: inherit;
   font-family: inherit;
   outline: none;
+;
 }
 
 .inner_text::-webkit-scrollbar{
@@ -68,9 +69,6 @@
   background-color: var(--delete-color);
 
 }
-//.card:hover .edit, .card:hover .del_card{
-//  display: block;
-//}
 .hidden{
   display: none;
 }

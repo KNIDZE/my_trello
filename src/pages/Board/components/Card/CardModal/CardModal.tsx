@@ -34,6 +34,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
       <div className="card_modal" onClick={(e): void => e.stopPropagation()}>
         <div className="delete_button" onClick={(): void => returnOnBoard(boardId || '', navigate)} />
         <h6
+          id="card_title"
           contentEditable="true"
           suppressContentEditableWarning
           data-ph="One more card..."

@@ -32,6 +32,7 @@ function Board(props: AllBoardProps): JSX.Element {
   const dispatch = useDispatch();
   let title;
   let renderList;
+  // render part
   if (board.title) {
     title = board.title;
     renderList = board.lists.map((key) => <List key={key.id} title={key.title} cards={key.cards} id={key.id} />);
@@ -52,6 +53,7 @@ function Board(props: AllBoardProps): JSX.Element {
             <button className="home">Home</button>
           </Link>
           <h1
+            id="board_title"
             className="table_title"
             contentEditable="true"
             suppressContentEditableWarning
@@ -61,7 +63,7 @@ function Board(props: AllBoardProps): JSX.Element {
             {title}
           </h1>
         </div>
-        <div className="container">
+        <div className="container" id="board_container">
           {renderList}
           <div className="button_column">
             <AddListButton />

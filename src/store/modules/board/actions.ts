@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import api from '../../../api/request';
-import { isStringValid } from '../../../common/commonFunctions';
+import { isStringValid, notValidString } from '../../../common/commonFunctions';
 
 interface Board {
   title: string;
@@ -32,11 +32,6 @@ interface BoardElements {
   createList: (title: string, id: string, position: number) => void;
 }
 
-function creationError(): void {
-  // eslint-disable-next-line no-alert
-  alert("It's not valid string");
-}
-
 async function addNewList(title: string, id: string, position: number, dispatch: Dispatch): Promise<void> {
   try {
     await api.post(`board/${id}/list`, {
@@ -56,7 +51,7 @@ export function addBoardElements(dispatch: Dispatch): BoardElements {
       if (isStringValid(title)) {
         addNewList(title, id, position, dispatch).then(() => getBoard(dispatch, id));
       } else {
-        creationError();
+        notValidString(title, 'add_list_form');
       }
     },
   };
@@ -85,7 +80,7 @@ export async function renameList(dispatch: Dispatch, title: string, listId: stri
       dispatch({ type: 'ERROR_ACTION_TYPE' });
     }
   } else {
-    creationError();
+    notValidString(title, `list_title_${listId}`);
   }
 }
 
@@ -104,7 +99,7 @@ export function boardFunctions(dispatch: Dispatch): { renameBoard(title: string,
       if (isStringValid(title)) {
         renameRequest(title, boardId, dispatch);
       } else {
-        creationError();
+        notValidString(title, 'board_title');
       }
     },
   };
@@ -172,9 +167,11 @@ export function renameCard(text: string, boardId: string, cardId: number, list_i
   // eslint-disable-next-line no-console
   if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
     api.put(`/board/${boardId}/card/${cardId}`, {
-      title: text,
+      title: text.trim(),
       list_id,
     });
     getBoard(dispatch, boardId);
+  } else {
+    notValidString(text, 'card_title');
   }
 }

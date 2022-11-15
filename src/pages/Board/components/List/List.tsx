@@ -24,6 +24,7 @@ export default function List(props: { title: string; cards: ICard[]; id: number 
     <div className="list" id={`list_${id}`} onDragEnter={(e): void => dragEnterHandler(e, `${boardId}`, dispatch)}>
       <div className="delete_button" onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString())} />
       <h2
+        id={`list_title_${id}`}
         contentEditable="true"
         suppressContentEditableWarning
         onBlur={(event): Promise<void> =>
