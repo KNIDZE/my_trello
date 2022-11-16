@@ -17,8 +17,6 @@ export const getBoards =
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const { boards } = await api.get('/board', config);
-      // eslint-disable-next-line no-console
-      console.log(boards);
       await dispatch({ type: 'UPDATE_BOARDS', payload: boards });
       dispatch({ type: 'CLEAR_BOARD' });
     } catch (e) {
