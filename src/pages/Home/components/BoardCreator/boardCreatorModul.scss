@@ -1,8 +1,5 @@
 
 .board_creator{
-  position: absolute;
-  margin-left: 15px;
-  margin-bottom: -300px;
   width: 180px;
   height: 160px;
   padding: 20px;
@@ -10,6 +7,7 @@
   border-radius: 15px;
   background-color: #b9cfe7;
   text-align: center;
+  margin: 0 0 50px;
 }
 #new_board_naming{
   border: black solid 3px;

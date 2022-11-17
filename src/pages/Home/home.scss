@@ -3,7 +3,7 @@
 }
 section.home{
   overflow-y: scroll;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -32,9 +32,12 @@ a:hover .delete_button{
   color: #ffc400;
   font-size: 50px;
 }
-.home .container{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+.home .container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
   height: auto;
 }
 .add_board{
@@ -49,6 +52,12 @@ a:hover .delete_button{
 .add_board:hover{
   background-color: #eaa78c;
 }
+.board_creator_div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
 @media (max-width: 450px) {
   .home_title{
     margin: 20px 0 20px 0;
@@ -58,6 +67,11 @@ a:hover .delete_button{
     flex-direction: column;
   }
   .add_board{
-    margin-bottom: 150px;
+    margin-bottom: 20px;
+  }
+  .log_out{
+    position: relative;
+    display: block;
+    margin: 20px;
   }
 }
