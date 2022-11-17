@@ -49,3 +49,15 @@ a:hover .delete_button{
 .add_board:hover{
   background-color: #eaa78c;
 }
+@media (max-width: 450px) {
+  .home_title{
+    margin: 20px 0 20px 0;
+  }
+  .home .container{
+    display: flex;
+    flex-direction: column;
+  }
+  .add_board{
+    margin-bottom: 150px;
+  }
+}

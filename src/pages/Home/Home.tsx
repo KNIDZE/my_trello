@@ -34,12 +34,12 @@ function Home({ boards }: PropsType): React.ReactElement {
     ));
     return (
       <section className="home" id="home_section">
-        <LogOut />
         <h1 className="home_title">My boards</h1>
         <div className="container">
           {boardsList}
           <BoardCreator />
         </div>
+        <LogOut />
       </section>
     );
   }

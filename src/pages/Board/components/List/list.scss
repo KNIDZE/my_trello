@@ -53,3 +53,8 @@ h2:hover{
 .list:hover .delete_button{
   display: block;
 }
+@media (max-width: 450px) {
+  .list{
+    margin-bottom: 30px;
+  }
+}

@@ -77,3 +77,23 @@ button.home{
   right: -100px;
   position: absolute;
 }
+
+@media (max-width: 450px){
+  .container{
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .button_column{
+    margin: 0;
+    height: 150px;
+  }
+  .add_list_label{
+    height: 70px;
+  }
+  .board_section .log_out{
+    position: relative;
+  }
+
+}

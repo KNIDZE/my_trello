@@ -9,4 +9,16 @@
   right: 20px;
   top: 26px;
   font-size: 15px;
+  background-color: #ed8c6b;
+}
+@media (max-width: 450px) {
+  .log_out{
+    top:initial;
+    right: initial;
+    bottom: 20px;
+    margin: 0;
+    width: 230px;
+    padding: 0 20px 0 20px;
+  }
+
 }

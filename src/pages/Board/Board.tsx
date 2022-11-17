@@ -47,7 +47,6 @@ function Board(props: AllBoardProps): JSX.Element {
           dropHandler(e, `${boardId}`, dispatch);
         }}
       >
-        <LogOut />
         <div className="table_title_div">
           <Link className="link_home" to="/">
             <button className="home">Home</button>
@@ -68,6 +67,7 @@ function Board(props: AllBoardProps): JSX.Element {
           <div className="button_column">
             <AddListButton />
           </div>
+          <LogOut />
         </div>
         {cardId && <CardModal lists={board.lists} />}
       </section>
