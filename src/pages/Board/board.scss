@@ -40,7 +40,7 @@ body{
 
 }
 button, .add_list_label, .add_list_form{
-  font-family: 'Pacifico', cursive;
+  font-family: var(--main-font);
   width: 100%;
   height: 15%;
   font-size: 1.5em;
