@@ -30,7 +30,7 @@ $out-animation-time: 500ms;
   width: 70%;
 }
 .login_input{
-  font-family: 'Pacifico', cursive;
+  font-family: var(--main-font);
   width: calc(100% - 4px - 10px);
   height: 30px;
   padding: 2px;

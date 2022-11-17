@@ -1,16 +1,11 @@
-@font-face {
-  font-family: 'Pacifico', cursive;
-  src: url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-}
-@font-face {
-  font-family: 'Amatic SC', cursive;
-  src: url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
-}
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+
 :root{
   --delete-color: #ff7676;
   --bg-color: rgb(0, 86, 140);
-  --main-font: 'Pacifico', cursive;
-  --secondary-font: 'Amatic SC', cursive;
+  --main-font: 'Quicksand', sans-serif;
+  --secondary-font: 'Amatic SC';
   --main-border: 5px solid black;
 }
 body{
