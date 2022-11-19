@@ -59,3 +59,17 @@
 .card_creator .button_panel{
   margin-bottom: 5px;
 }
+@media (max-width: 450px) {
+  .create_card_textarea{
+    height: 50px;
+    font-size: 20px;
+  }
+  .create_card_button{
+    width: 150px;
+    height: 40px;
+  }
+  .card_creator .delete_button{
+    width: 25px;
+    height: 25px;
+  }
+}
