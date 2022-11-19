@@ -2,6 +2,7 @@ import React from 'react';
 import './list.scss';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { CgCloseO } from 'react-icons/cg';
 import { ICard } from '../../../../common/interfaces/ICard.t';
 import Card from '../Card/Card';
 import { delList, renameList } from '../../../../store/modules/board/actions';
@@ -22,7 +23,9 @@ export default function List(props: { title: string; cards: ICard[]; id: number 
   ));
   return (
     <div className="list" id={`list_${id}`} onDragEnter={(e): void => dragEnterHandler(e, `${boardId}`, dispatch)}>
-      <div className="delete_button" onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString())} />
+      <div className="delete_button" onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString())}>
+        <CgCloseO color="white" size={100} />
+      </div>
       <h2
         id={`list_title_${id}`}
         contentEditable="true"

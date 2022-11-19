@@ -51,7 +51,7 @@ h2:hover{
   z-index: 1;
 }
 .list:hover .delete_button{
-  display: block;
+  display: flex;
 }
 @media (max-width: 450px) {
   .list{

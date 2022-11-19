@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import './cardmodal.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { CgCloseO } from 'react-icons/cg';
 import { changeDescription, closeOnEscape, copyText, returnOnBoard, saveDescription } from './cardmodalfunc';
 import IList from '../../../../../common/interfaces/IList';
 import { findListCard } from '../../../../../common/commonFunctions';
@@ -35,7 +36,9 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
       onKeyUp={(e): void => closeOnEscape(e.key, boardId || '', navigate)}
     >
       <div className="card_modal" onClick={(e): void => e.stopPropagation()}>
-        <div className="delete_button" onClick={(): void => returnOnBoard(boardId || '', navigate)} />
+        <div className="delete_button" onClick={(): void => returnOnBoard(boardId || '', navigate)}>
+          <CgCloseO color="white" size={100} />
+        </div>
         <h6
           id="card_title"
           contentEditable="true"

@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import './logout.scss';
 import { useNavigate } from 'react-router-dom';
+import { HiOutlineLogout } from 'react-icons/hi';
 import api from '../../api/request';
 
 export function LogOut(): ReactElement {
@@ -14,7 +15,7 @@ export function LogOut(): ReactElement {
   }
   return (
     <button className="log_out" onClick={(): void => logOut()}>
-      log out
+      <HiOutlineLogout fontWeight="50px" className="log_out_icon" />
     </button>
   );
 }

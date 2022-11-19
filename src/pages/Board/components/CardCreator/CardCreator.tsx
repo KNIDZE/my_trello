@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './cardCreator.scss';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { CardCreatorFunctions, turnCardCreator } from '../../../../store/modules/board/actions';
 
 function CardCreator(props: CreatorProps): React.ReactElement {
@@ -35,7 +36,7 @@ function CardCreator(props: CreatorProps): React.ReactElement {
   }
   return (
     <button className="add_card" onClick={(): void => changeCreatorVisibility(true)}>
-      <p>+</p>
+      <AiOutlinePlus />
     </button>
   );
 }
