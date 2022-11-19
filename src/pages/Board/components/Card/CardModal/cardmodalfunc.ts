@@ -8,9 +8,11 @@ export function changeDescription(disabled: boolean): void {
   if (disabled) {
     input.removeAttribute('disabled');
     input.classList.add('description_input_changed');
+    input.setAttribute('placeholder', 'Some description...');
   } else {
     input.setAttribute('disabled', 'true');
     input.classList.remove('description_input_changed');
+    input.removeAttribute('placeholder');
   }
 }
 export function returnOnBoard(boardId: string, navigate: NavigateFunction): void {

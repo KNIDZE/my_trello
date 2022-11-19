@@ -15,6 +15,9 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
   const { lists } = props;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { card, list } = findListCard(lists, cardId || '');
+  if (card?.description === ' ') {
+    card.description = '';
+  }
   for (let i = 0; i < 3; i++) {
     participants.push(<div key={i} className="participant" />);
   }
@@ -51,7 +54,6 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
         <div className="participants">{participants}</div>
         <p className="description_label">Description:</p>
         <textarea
-          placeholder="Some description..."
           defaultValue={card?.description}
           disabled
           className="description_input"
