@@ -6,7 +6,7 @@ import { dragStartHandler } from './dragNdrop';
 
 export default function Card(props: ICard): React.ReactElement {
   let { title } = props;
-  const { id } = props;
+  const { id, listId } = props;
   if (title.length > 30) {
     title = `${title.slice(0, 25)}...`;
   }
@@ -16,7 +16,7 @@ export default function Card(props: ICard): React.ReactElement {
       className="card"
       draggable="true"
       onDragStart={(e): void => {
-        dragStartHandler(e, title, id);
+        dragStartHandler(e, title, id, listId);
       }}
     >
       <Link className="card_link" to={`card/${id}`}>

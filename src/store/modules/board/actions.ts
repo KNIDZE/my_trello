@@ -143,12 +143,7 @@ export async function delCard(dispatch: Dispatch, boardId: string, cardId: strin
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateCards(
-  boardId: string,
-  cards: HTMLCollection | undefined,
-  listId: string | undefined,
-  dispatch: Dispatch
-): void {
+export function updateCards(boardId: string, cards: HTMLCollection | undefined, listId: string | undefined): void {
   try {
     const objectList = [];
     if (cards !== undefined) {
@@ -156,7 +151,6 @@ export function updateCards(
         objectList.push({ id: cards[i].id.slice(9), position: i - 1, list_id: listId?.slice(5) });
       }
       api.put(`/board/${boardId}/card`, objectList);
-      getBoard(dispatch, boardId);
     }
   } catch (e) {
     // eslint-disable-next-line no-console

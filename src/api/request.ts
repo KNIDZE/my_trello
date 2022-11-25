@@ -22,7 +22,8 @@ instance.interceptors.response.use(
     return res.data;
   },
   (error) => {
-    if (error.response.status === 401) {
+    // eslint-disable-next-line no-restricted-globals
+    if (error.response.status === 401 && location.href.slice(-6, location.href.length) !== '/login') {
       localStorage.setItem('is_auth', 'false');
       return (window.location.href = '/login');
     }
