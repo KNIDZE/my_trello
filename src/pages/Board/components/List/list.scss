@@ -8,10 +8,9 @@
 .list{
   position: relative;
   background-color: var(--list-color);
-  width: 0;
   height: 0;
   animation: showUp 1s forwards;
-  margin: 0 20px 0 20px;
+  margin: 10px 20px 15px 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -24,9 +23,10 @@ h2{
   text-align: center;
   color: #070000;
   background-color: #EDBF3B;
-  width: 80%;
+  width: 250px;
   height:35px;
   padding: 5px 0 5px 0;
+  margin: 15px 15px 20px 15px;
   border: 5px solid black;
   border-radius: 30px;
   outline: none;

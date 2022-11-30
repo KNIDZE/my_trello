@@ -25,9 +25,9 @@ interface BoardProps {
     lists: IList[];
   };
 }
+
 function Board(props: AllBoardProps): JSX.Element {
   const { board, renameBoard } = props;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { boardId, cardId } = useParams();
   const dispatch = useDispatch();
   let title;
@@ -67,8 +67,8 @@ function Board(props: AllBoardProps): JSX.Element {
           <div className="button_column">
             <AddListButton />
           </div>
-          <LogOut />
         </div>
+        <LogOut />
         {cardId && <CardModal lists={board.lists} />}
       </section>
     );

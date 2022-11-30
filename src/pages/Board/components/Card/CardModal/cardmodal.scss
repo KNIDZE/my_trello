@@ -113,6 +113,16 @@ h6{
   height: 30px;
   margin: 30px;
 }
+#lists, .option{
+  color: white;
+  background-color: #95b7ff;
+  font-family: var(--main-font);
+  font-size: 20px;
+  text-align: center;
+  height: 50px;
+  border: var(--main-border);
+  border-radius: 10px;
+}
 @media (max-width: 450px){
 
   .card_modal_area{
@@ -140,13 +150,22 @@ h6{
     position: relative;
     transform: none;
     flex-direction: row;
-    justify-content: space-around;
+    align-items: center;
     width: 100%;
     right: initial;
     top: initial;
   }
+  #lists{
+    width: 100%;
+    top: 20px;
+    position: absolute;
+  }
+  .option{
+    width: 50%;
+  }
   .action{
-    width: 90px;
+    margin-top: 100px;
+    width: 100px;
     height: 50px;
   }
 }

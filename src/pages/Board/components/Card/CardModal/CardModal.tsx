@@ -3,7 +3,14 @@ import './cardmodal.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
-import { changeDescription, closeOnEscape, copyText, returnOnBoard, saveDescription } from './cardmodalfunc';
+import {
+  changeDescription,
+  closeOnEscape,
+  copyText,
+  returnOnBoard,
+  saveDescription,
+  transferCard,
+} from './cardmodalfunc';
 import IList from '../../../../../common/interfaces/IList';
 import { findListCard } from '../../../../../common/commonFunctions';
 import { delCard, renameCard } from '../../../../../store/modules/board/actions';
@@ -16,9 +23,12 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
   const { lists } = props;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { card, list } = findListCard(lists, cardId || '');
-  if (card?.description === ' ') {
-    card.description = '';
-  }
+  const [listToMove, transferList] = useState(list.id);
+  const listsToMove = lists.map((curList) => (
+    <option key={curList.id} value={curList.id} className="option">
+      {curList.title}
+    </option>
+  ));
   for (let i = 0; i < 3; i++) {
     participants.push(<div key={i} className="participant" />);
   }
@@ -51,7 +61,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
           {card?.title}
         </h6>
         <p>
-          In <span>{list.title}</span> list
+          In <span id="in_list">{list.title}</span> list
         </p>
         <p className="participants_label">Participants:</p>
         <div className="participants">{participants}</div>
@@ -75,10 +85,18 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
           Change
         </button>
         <div className="actions">
+          <select defaultValue={list.id} id="lists" onChange={(e): void => transferList(e.currentTarget.value)}>
+            {listsToMove}
+          </select>
+          <button
+            className="action"
+            onClick={(): void => transferCard(boardId || '', listToMove, card, dispatch, lists)}
+          >
+            Move
+          </button>
           <button className="action" onClick={(): void => copyText()}>
             Copy
           </button>
-          <button className="action"> Move </button>
           <button
             className="action delete_action_button"
             onClick={(): void => {
