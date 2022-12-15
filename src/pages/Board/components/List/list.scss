@@ -3,14 +3,14 @@
 }
 @keyframes showUp {
   0%{width: 0; height: 0}
-  100%{width: 300px; height: 500px}
+  100%{width: 300px; min-height: 500px}
 }
 .list{
   position: relative;
   background-color: var(--list-color);
-  height: 0;
+  height: fit-content;
   animation: showUp 1s forwards;
-  margin: 10px 20px 15px 20px;
+  margin: 10px 20px 40px 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

@@ -13,6 +13,8 @@ export const config: AxiosRequestConfig = {
 export const getBoards =
   () =>
   async (dispatch: Dispatch): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log('working');
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

@@ -2,7 +2,6 @@
   --main-color: #f1d591;
 }
 section.home{
-  overflow-y: scroll;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -34,7 +33,7 @@ a:hover .delete_button{
 }
 .home .container {
   position: relative;
-  display: flex;
+  display: grid;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;

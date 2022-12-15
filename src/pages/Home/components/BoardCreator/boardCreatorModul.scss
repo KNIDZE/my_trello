@@ -1,5 +1,5 @@
 
-.board_creator{
+.board_creator {
   width: 180px;
   height: 160px;
   padding: 20px;
@@ -9,7 +9,8 @@
   text-align: center;
   margin: 0 0 50px;
 }
-#new_board_naming{
+
+#new_board_naming {
   border: black solid 3px;
   border-radius: 15px;
   outline: none;
@@ -17,16 +18,25 @@
   height: 30%;
   font-size: 16px;
   font-weight: bold;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
 }
-h4{
+
+#new_board_naming::-webkit-scrollbar {
+  width: 0;
+}
+
+h4 {
   margin: 0 0 10px 0;
 }
-[contenteditable=true]:empty:not(:focus):before{
-  content:attr(data-ph);
-  color:grey;
-  font-style:italic;
+
+[contenteditable=true]:empty:not(:focus):before {
+  content: attr(data-ph);
+  color: grey;
+  font-style: italic;
 }
-.board_creator button{
+
+.board_creator button {
   height: auto;
   margin-top: 15px;
   border: black solid 3px;

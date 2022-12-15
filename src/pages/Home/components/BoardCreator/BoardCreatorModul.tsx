@@ -14,8 +14,7 @@ function BoardCreatorModule(props: AddBoard): JSX.Element {
         id="new_board_naming"
         onBlur={(event): void => setBoardTitle(event.currentTarget.textContent || '')}
       />
-      {/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */}
-      <button onClick={() => checkBoardTitle(boardTitle)} className="add_board_submit">
+      <button onClick={(): void => checkBoardTitle(boardTitle)} className="add_board_submit">
         Create
       </button>
     </div>
