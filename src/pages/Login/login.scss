@@ -1,3 +1,5 @@
+@import "./src/common/constants/styleConstants";
+
 $animation-time: 300ms;
 $out-animation-time: 500ms;
 .login_section, .registration_section{
@@ -9,9 +11,8 @@ $out-animation-time: 500ms;
   width: 20%;
   min-width: 300px;
   margin: auto;
-  background-color: var(--main-color);
+  background-color: $main_color;
   border-radius: 30px;
-  border: var(--main-border);
 }
 .center_column{
   display: flex;
@@ -30,39 +31,39 @@ $out-animation-time: 500ms;
   width: 70%;
 }
 .login_input{
-  font-family: var(--main-font);
+  font-family: $main_font;
   width: calc(100% - 4px - 10px);
   height: 30px;
   padding: 2px;
   border-radius: 5px;
-  border: var(--main-border);
+  border: $main_border;
   margin: 5px 0 5px 0;
   outline: none;
   background-color: #fff7e0;
 }
 .login_area h1,.registration_area h1{
   margin: 0 0 10px 0;
-  font-family: 'Amatic SC', cursive;
+  font-family: $secondary_font;
   font-size: 30px;
 }
 .login_area form p, .registration_area form p{
   margin: 0;
 }
 .login_registration_div{
-  font-family: 'Amatic SC', cursive;
+  font-family: $secondary_font;
   font-size: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   margin-top: 10px;
-}
-.login_registration_div p{
-  margin: 0;
+  p{
+    margin: 0;
+  }
 }
 .sign_up_proposition{
   cursor: pointer;
   margin-left: 10px;
-  color: #318BC6;
+  color: $link_color;
   text-decoration: underline;
 }
 .login_trans-appear {

@@ -1,11 +1,11 @@
-
+@import "src/common/constants/styleConstants";
 .board_creator {
   width: 180px;
   height: 160px;
   padding: 20px;
   border: var(--main-border);
   border-radius: 15px;
-  background-color: #b9cfe7;
+  background-color: $board_creator_color;
   text-align: center;
   margin: 0 0 50px;
 }

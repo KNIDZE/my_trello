@@ -1,3 +1,4 @@
+@import "src/common/constants/styleConstants";
 @keyframes showUpBoards {
   0%{opacity: 0}
   100%{opacity: 100}
@@ -16,7 +17,6 @@ h3{
   animation: showUpBoards 0.5s forwards ease-out;
   background-color: #EDCB6B;
   margin: 15px;
-  border: var(--main-border);
   border-radius: 15px;
   cursor: pointer;
 }
@@ -30,9 +30,9 @@ h3{
   border-radius: 20px;
   height: 15px;
   width: 15px;
-  background-color: #ff7676;
+  background-color: $delete_button_color;
   z-index: 50;
-}
-.delete_button:hover{
-  cursor: pointer;
+  &:hover{
+    cursor: pointer;
+  }
 }

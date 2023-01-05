@@ -7,6 +7,7 @@ import { dragStartHandler } from './dragNdrop';
 export default function Card(props: ICard): React.ReactElement {
   let { title } = props;
   const { id, listId } = props;
+  // cut long sentence
   if (title.length > 30) {
     title = `${title.slice(0, 25)}...`;
   }

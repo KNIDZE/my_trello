@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './addListButton.scss';
-import { connect, ConnectedProps } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { addBoardElements } from '../../../../store/modules/board/actions';
+import { Dispatch } from 'redux';
+import { addNewList, getBoard } from '../../../../store/modules/board/actions';
+import { isStringValid, notValidString } from '../../../../common/commonFunctions';
 
 interface ButtonProps {
   showLabel: boolean;
@@ -14,9 +16,24 @@ interface ButtonState {
   newListTitle: string;
   board: { lists: [] };
 }
-function AddListButton(props: CreatorProps): React.ReactElement {
-  const { createList, pos } = props;
+const mapStateToProps = (state: { board: ButtonState }): ButtonProps => ({
+  showLabel: state.board.showLabel,
+  newListTitle: state.board.newListTitle,
+  pos: state.board.board.lists.length,
+});
+
+async function createList(dispatch: Dispatch, title: string, id: string, position: number): Promise<void> {
+  if (isStringValid(title)) {
+    await addNewList(title, id, position, dispatch);
+    await getBoard(dispatch, id);
+  } else {
+    notValidString(title, 'add_list_form');
+  }
+}
+export default function AddListButton(): React.ReactElement {
+  const { pos } = useSelector(mapStateToProps);
   const id = useParams().boardId;
+  const dispatch = useDispatch();
   const [newListTitle, saveListTitle] = useState('');
   const [showLabel, turnButton] = useState(true);
   if (showLabel) {
@@ -34,7 +51,10 @@ function AddListButton(props: CreatorProps): React.ReactElement {
         placeholder="enter title"
       />
       <div className="button_panel" id="list_creation_panel">
-        <button className="add_list_submit" onClick={(): void => createList(newListTitle, id || '', pos)}>
+        <button
+          className="add_list_submit"
+          onClick={(): Promise<void> => createList(dispatch, newListTitle, id || '', pos)}
+        >
           Add
         </button>
         <div onClick={(): void => turnButton(true)} className="delete_button" />
@@ -42,11 +62,3 @@ function AddListButton(props: CreatorProps): React.ReactElement {
     </div>
   );
 }
-const mapStateToProps = (state: { board: ButtonState }): ButtonProps => ({
-  showLabel: state.board.showLabel,
-  newListTitle: state.board.newListTitle,
-  pos: state.board.board.lists.length,
-});
-const connector = connect(mapStateToProps, addBoardElements);
-type CreatorProps = ConnectedProps<typeof connector>;
-export default connector(AddListButton);

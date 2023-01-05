@@ -1,6 +1,4 @@
-:root{
-  --card-color:  #bbdffd;
-}
+@import "src/common/constants/styleConstants";
 @keyframes showUpCard {
   0%{opacity: 0}
   100%{opacity: 1}
@@ -39,15 +37,13 @@
 }
 .card{
   animation: showUpCard 0.5s forwards ease-in;
-  width: 230px;
+  width: 240px;
   padding: 0 2.5% 0 2.5%;
   height: 70px;
   position: relative;
-  background-color: var(--card-color);
-  border: 5px solid black;
+  background-color: $card_color;
   border-radius: 20px;
   user-select: none;
-
 }
 
 .edit, .del_card{
@@ -60,13 +56,13 @@
   height: 20px;
   border-radius: 20px;
   border: 5px solid black;
-  background-color: var(--bg-color);
+  background-color: $bg_color;
   z-index: 5;
 }
 .del_card{
   right: -15px;
   top: -15px;
-  background-color: var(--delete-color);
+  background-color: $delete_button_color;
 
 }
 .hidden{

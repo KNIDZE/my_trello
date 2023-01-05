@@ -1,27 +1,36 @@
+@import "src/common/constants/styleConstants";
 .add_list_label{
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-top: 10px;
 }
 .add_list_label p{
   width: 100%;
   text-align: center;
 }
 .add_list_form{
+  margin-top: 10px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  input{
+    outline: none;
+    margin-bottom: 5px;
+    background-color: #f1c763;
+    border-radius: 15px;
+    width: 85%;
+    height: 35px;
+  }
+  .delete_button{
+    display: block;
+    position: initial;
+    z-index: 2;
+  }
 }
-.add_list_form input{
-  margin-bottom: 5px;
-  background-color: #f1c763;
-  border: 2px solid black;
-  border-radius: 15px;
-  width: 85%;
-  height: 35px;
-}
+
 .button_panel{
   display: flex;
   flex-direction: row;
@@ -39,12 +48,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-}
-.add_list_submit:hover{
-  background-color: #47a1ea;
-}
-.add_list_form .delete_button{
-  display: block;
-  position: initial;
-  z-index: 2;
+  &:hover{
+    background-color: #47a1ea;
+  }
 }

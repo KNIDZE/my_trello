@@ -3,14 +3,7 @@ import './cardmodal.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
-import {
-  changeDescription,
-  closeOnEscape,
-  copyText,
-  returnOnBoard,
-  saveDescription,
-  transferCard,
-} from './cardmodalfunc';
+import { changeDescription, copyText, returnOnBoard, saveDescription, transferCard } from './cardmodalfunc';
 import IList from '../../../../../common/interfaces/IList';
 import { findListCard } from '../../../../../common/commonFunctions';
 import { delCard, renameCard } from '../../../../../store/modules/board/actions';
@@ -40,11 +33,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
   );
   const [isChangeable, inverseChangeable] = useState(true);
   return (
-    <div
-      className="card_modal_area"
-      onClick={(): void => returnOnBoard(boardId || '', navigate)}
-      onKeyUp={(e): void => closeOnEscape(e.key, boardId || '', navigate)}
-    >
+    <div className="card_modal_area" onClick={(): void => returnOnBoard(boardId || '', navigate)}>
       <div className="card_modal" onClick={(e): void => e.stopPropagation()}>
         <div className="delete_button" onClick={(): void => returnOnBoard(boardId || '', navigate)}>
           <CgCloseO color="white" size={100} />
@@ -54,7 +43,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
           contentEditable="true"
           suppressContentEditableWarning
           data-ph="One more card..."
-          onBlur={(event): void =>
+          onBlur={(event): Promise<void> =>
             renameCard(event.currentTarget.textContent || '', boardId || '', card?.id || 0, list.id, dispatch)
           }
         >
@@ -71,7 +60,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
           disabled
           className="description_input"
           id="description"
-          onBlur={(e): void =>
+          onBlur={(e): Promise<void> =>
             saveDescription(cardId, card?.title, e.currentTarget.value, boardId, `${list.id}`, dispatch)
           }
         />
@@ -90,7 +79,7 @@ export function CardModal(props: { lists: IList[] }): ReactElement {
           </select>
           <button
             className="action"
-            onClick={(): void => transferCard(boardId || '', listToMove, card, dispatch, lists)}
+            onClick={(): Promise<void> => transferCard(boardId || '', listToMove, card, dispatch, lists)}
           >
             Move
           </button>

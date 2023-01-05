@@ -1,3 +1,4 @@
+@import "src/common/constants/styleConstants";
 .add_card{
   background-color: #318BC6;
   border-radius:50%;
@@ -7,11 +8,11 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-}
-.add_card p{
-  margin: -3px -1px 0 0;
-  text-align: center;
-  font-size: 30px;
+  p{
+    margin: -3px -1px 0 0;
+    text-align: center;
+    font-size: 30px;
+  }
 }
 .card_creator{
   display: flex;
@@ -19,15 +20,30 @@
   justify-content: center;
   align-items: center;
   width: 80%;
-  border: var(--main-border);
   background-color: #EDBF3B;
   border-radius: 30px;
+  .delete_button{
+    display: block;
+    position: relative;
+    width: 15px;
+    height: 15px;
+    right: initial;
+    top: initial;
+    margin-left: 5px;
+    border: 0;
+    background-color: $delete_button_color;
+  }
+  .button_panel{
+    margin-bottom: 5px;
+  }
+  button{
+    border: 0;
+  }
 }
 .create_card_textarea{
   background-color: #e8c76d;
   width: 80%;
   border-radius: 10px;
-  border:  solid black ;
   outline: none;
   margin: 5px 0 10px 0;
   padding: 5px;
@@ -45,20 +61,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 5px;
-  background-color: #318BC6;;
-}
-.card_creator .delete_button{
-  display: block;
-  position: relative;
-  width: 15px;
-  height: 15px;
-  right: initial;
-  top: initial;
-  margin-left: 5px;
-  border: 3px solid black ;
-}
-.card_creator .button_panel{
-  margin-bottom: 5px;
+  background-color: #318BC6;
 }
 @media (max-width: 450px) {
   .create_card_textarea{

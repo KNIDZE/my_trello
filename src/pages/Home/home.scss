@@ -1,55 +1,56 @@
-:root{
-  --main-color: #f1d591;
-}
-section.home{
+@import "src/common/constants/styleConstants";
+
+.home{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
   user-select: none;
+  .container {
+    position: relative;
+    display: grid;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: auto;
+  }
 }
+
 a{
   text-decoration: none;
   color: black;
   z-index: 1;
+  &:active{
+    color: initial;
+  }
+  &:hover{
+    div.board{
+      background-color: #f1d591;
+    }
+    .delete_button{
+      display: flex;
+    }
+  }
 }
-.board{
-  font-size: 25px;
-}
-a:active{
-  color: initial;
-}
-a:hover div.board{
-  background-color: #f1d591;
-}
-a:hover .delete_button{
-  display: flex;
-}
+
 .home_title{
-  font-family: var(--secondary-font);
-  color: #ffc400;
+  font-family: $secondary_font;
+  color: $home_title_color;
   font-size: 50px;
 }
-.home .container {
-  position: relative;
-  display: grid;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: auto;
-}
+
 .add_board{
   animation: none;
   position: relative;
   font-size: 1em;
-  background-color: #ED8C6B;
+  background-color: $secondary_color;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.add_board:hover{
-  background-color: #eaa78c;
+  &:hover{
+    background-color: #eaa78c;
+  }
 }
 .board_creator_div{
   display: flex;
@@ -61,9 +62,11 @@ a:hover .delete_button{
   .home_title{
     margin: 20px 0 20px 0;
   }
-  .home .container{
-    display: flex;
-    flex-direction: column;
+  .home {
+    .container{
+      display: flex;
+      flex-direction: column;
+    }
   }
   .add_board{
     margin-bottom: 20px;

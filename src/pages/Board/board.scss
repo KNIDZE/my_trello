@@ -1,22 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+@import "src/common/constants/styleConstants";
 
-:root{
-  --delete-color: #ff7676;
-  --bg-color: rgb(0, 86, 140);
-  --main-font: 'Quicksand', sans-serif;
-  --secondary-font: 'Amatic SC';
-  --main-border: 5px solid black;
-}
 body{
-  background-color: var(--bg-color);
-  font-family: var(--main-font);
+  background-color: $bg_color;
+  font-family: $main_font;
 }
 
 .table_title{
-  font-family: var(--secondary-font);
+  font-family: $secondary-font;
   font-size: 40px;
-  color: #ff8d63;
+  color: $secondary_color;
   margin: 20px 0 20px 0;
   text-align: center;
   padding: 5px 10px 5px 10px;
@@ -40,14 +32,14 @@ body{
   flex-wrap: wrap;
 }
 button, .add_list_label, .add_list_form{
-  font-family: var(--main-font);
+  font-family: $main_font;
   width: 100%;
   height: 15%;
   font-size: 1.5em;
   background-color: #EDBF3B;
   padding: 5px 0 5px 0;
   border-radius: 40px;
-  border: var(--main-border)
+  border: $main_border;
 }
 button:hover, .add_list:hover{
   background-color: #f1c763;
@@ -61,6 +53,7 @@ button:hover, .add_list:hover{
   margin-left: 20px;
 }
 button.home{
+  min-height: 0;
   font-size: 1.2em;
   text-transform: capitalize;
   padding: 5px 10px 5px 10px;

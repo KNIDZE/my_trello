@@ -11,10 +11,8 @@ export default function Board(props: { title: string; id: number }): React.React
       <h3> {title} </h3>
       <div
         className="delete_button"
-        onClick={(event): void => {
-          event.stopPropagation();
-          event.preventDefault();
-          delBoard()(dispatch, id);
+        onClick={(): void => {
+          delBoard(dispatch, id);
         }}
       />
     </div>

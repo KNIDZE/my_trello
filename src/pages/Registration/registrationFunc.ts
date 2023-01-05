@@ -1,63 +1,34 @@
-import { Dispatch, SetStateAction } from 'react';
 import { NavigateFunction } from 'react-router-dom';
+import { Dispatch } from 'redux';
 import api from '../../api/request';
 import { logIn } from '../Login/loginfunc';
 
-export function emailValidation(
-  email: string,
-  allow: boolean[],
-  allow_func: Dispatch<SetStateAction<boolean[]>>
-): void {
+interface ValidationProps {
+  email: boolean;
+  password: boolean;
+  confirm: boolean;
+}
+export function objectsEqual(firstObg: ValidationProps, secondObg: ValidationProps): boolean {
+  return (
+    firstObg.password === secondObg.password &&
+    firstObg.email === secondObg.email &&
+    firstObg.confirm === secondObg.confirm
+  );
+}
+export function emailValidation(email: string): boolean {
   if (!email.match(/^[a-zA-Z\d_.+-]+@[a-zA-Z\d-]+\.[a-zA-Z\d-.]+$/)) {
-    document.getElementById('email')?.classList.add('not_valid');
-    // eslint-disable-next-line no-param-reassign
-    allow[0] = false;
-    allow_func(allow);
-  } else {
-    document.getElementById('email')?.classList.remove('not_valid');
-    // eslint-disable-next-line no-param-reassign
-    allow[0] = true;
-    allow_func(allow);
+    return false;
   }
+  return true;
 }
-export function isPasswordEqual(
-  password1: string,
-  password2: string,
-  allow: boolean[],
-  allow_func: Dispatch<SetStateAction<boolean[]>>
-): void {
-  if (password1 !== password2) {
-    const form = document.getElementById('confirm_password_form');
-    const warning = document.createElement('p');
-    warning.id = 'confirm_warning';
-    warning.innerHTML = 'passwords not match';
-    warning.className = 'warning';
-    // eslint-disable-next-line no-param-reassign
-    allow[2] = false;
-    allow_func(allow);
-    if (form !== null && document.getElementById('confirm_warning') == null) form.append(warning);
-  } else {
-    document.getElementById('confirm_warning')?.remove();
-    // eslint-disable-next-line no-param-reassign
-    allow[2] = true;
-    allow_func(allow);
-  }
+export function isPasswordEqual(password1: string, password2: string): boolean {
+  return password1 === password2;
 }
-export function isPasswordCorrect(allow: Array<boolean>, allow_func: Dispatch<SetStateAction<boolean[]>>): void {
+export function isPasswordCorrect(): boolean {
+  const password = document.getElementsByClassName('password_score')[0];
+  if (!password) return false;
   const passwordScore = document.getElementsByClassName('password_score')[0].innerHTML;
-  // eslint-disable-next-line no-param-reassign
-  allow[1] = passwordScore !== 'too short' && passwordScore !== 'weak';
-  allow_func(allow);
-  if (!allow[1]) {
-    const form = document.getElementById('password_form');
-    const warning = document.createElement('p');
-    warning.id = 'warning';
-    warning.className = 'warning';
-    warning.innerHTML = 'password too short/too week';
-    if (form !== null && document.getElementById('warning') == null) form.insertBefore(warning, form.children[2]);
-  } else {
-    document.getElementById('warning')?.remove();
-  }
+  return passwordScore !== 'too short' && passwordScore !== 'weak';
 }
 function hasAccount(): void {
   const formEmail = document.getElementById('email')?.parentElement;
@@ -69,7 +40,7 @@ function hasAccount(): void {
     formEmail?.append(emailWarning);
   }
 }
-function registration(email: string, password: string, navigate: NavigateFunction): void {
+function registration(email: string, password: string, navigate: NavigateFunction, dispatch: Dispatch): void {
   api
     .post('/user', {
       email,
@@ -79,7 +50,7 @@ function registration(email: string, password: string, navigate: NavigateFunctio
       if (e.data?.error === 'User already exists') {
         hasAccount();
       } else {
-        logIn(email, password);
+        logIn(email, password, dispatch);
         setTimeout(() => {
           navigate('/');
         }, 1000);
@@ -87,19 +58,18 @@ function registration(email: string, password: string, navigate: NavigateFunctio
     });
 }
 
-export function signUp(allowed: Array<boolean>, email: string, password: string, navigate: NavigateFunction): void {
-  const allowReg = allowed.reduce((p, c) => p && c, true);
+export function signUp(
+  allowed: ValidationProps,
+  email: string,
+  password: string,
+  navigate: NavigateFunction,
+  dispatch: Dispatch
+): void {
+  const allowReg = allowed.confirm && allowed.email && allowed.password;
   localStorage.removeItem('user_token');
   // eslint-disable-next-line no-alert,@typescript-eslint/no-unused-expressions
   if (allowReg) {
     // hasAccount();
-    registration(email, password, navigate);
+    registration(email, password, navigate, dispatch);
   }
-}
-export function removeEmailWarning(): void {
-  document.getElementById('email_warning')?.remove();
-}
-
-export function goLogin(navigate: NavigateFunction): void {
-  navigate(`/login`);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BoardCreatorModule from './BoardCreatorModul';
+import BoardCreatorModule from './BoardCreatorModal';
 
 export default function BoardCreator(): JSX.Element {
   const [boardCreatorVisible, changeCreatorsVisibility] = useState(false);

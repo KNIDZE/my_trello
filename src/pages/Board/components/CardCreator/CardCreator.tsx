@@ -1,13 +1,38 @@
 import React, { useState } from 'react';
 import './cardCreator.scss';
-import { connect, ConnectedProps } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { CardCreatorFunctions, turnCardCreator } from '../../../../store/modules/board/actions';
+import { Dispatch } from 'redux';
+import { useDispatch } from 'react-redux';
+import { getBoard } from '../../../../store/modules/board/actions';
+import api from '../../../../api/request';
 
-function CardCreator(props: CreatorProps): React.ReactElement {
-  const { createCard, listId, lastCardPos } = props;
+async function createCard(
+  text: string,
+  list_id: string,
+  boardId: string,
+  position: number,
+  dispatch: Dispatch
+): Promise<void> {
+  if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
+    await api.post(`/board/${boardId}/card`, {
+      title: text,
+      list_id,
+      position,
+      description: ' ',
+      custom: '',
+    });
+    await getBoard(dispatch, boardId);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log('Wrong Text!');
+  }
+}
+
+export default function CardCreator(props: { listId: string; lastCardPos: number }): React.ReactElement {
+  const { listId, lastCardPos } = props;
   const { boardId } = useParams();
+  const dispatch = useDispatch();
   const [showCreator, changeCreatorVisibility] = useState(false);
   const [cardText, saveCardText] = useState('');
   if (showCreator) {
@@ -23,8 +48,9 @@ function CardCreator(props: CreatorProps): React.ReactElement {
           <button
             className="create_card_button"
             onClick={(): void => {
-              createCard(cardText, listId, boardId || '', lastCardPos + 1);
-              changeCreatorVisibility(false);
+              createCard(cardText, listId, boardId || '', lastCardPos + 1, dispatch).then((): void =>
+                changeCreatorVisibility(false)
+              );
             }}
           >
             Create
@@ -40,26 +66,3 @@ function CardCreator(props: CreatorProps): React.ReactElement {
     </button>
   );
 }
-interface Props {
-  showCardCreator: boolean;
-  cardText: string;
-}
-function mapStateToProps(state: { board: Props }): Props {
-  return {
-    showCardCreator: state.board.showCardCreator,
-    cardText: state.board.cardText,
-  };
-}
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const mergeProps = (
-  stateProps: Props,
-  dispatchProps: CardCreatorFunctions,
-  ownProps: { listId: string; lastCardPos: number }
-) => ({
-  ...ownProps,
-  ...stateProps,
-  ...dispatchProps,
-});
-const connector = connect(mapStateToProps, turnCardCreator, mergeProps);
-type CreatorProps = ConnectedProps<typeof connector>;
-export default connector(CardCreator);

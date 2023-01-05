@@ -1,23 +1,35 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import './login.scss';
 import { useNavigate } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
+import { useDispatch } from 'react-redux';
 import Loading from '../Home/components/Loading/Loading';
 import { goSignUp, logIn } from './loginfunc';
+import { Mistake } from '../../common/Mistake/Mistake';
 
 export function Login(): ReactElement {
   const navigate = useNavigate();
   const [email, changeEmail] = useState('');
   const [password, changePassword] = useState('');
   const [transState, changeTransState] = useState(true);
+  const [mistakeVisibility, showMistake] = useState(false);
   const isAuthorised = localStorage.getItem('is_auth');
   const ref = useRef(null);
-  useEffect(() => {
-    if (isAuthorised === 'true') {
-      navigate('/');
+  const dispatch = useDispatch();
+  const logInHandler = async (): Promise<void> => {
+    const promise = await logIn(email, password, dispatch);
+    if (promise) {
+      changeTransState(false);
+      setTimeout(() => {
+        navigate('/');
+      }, 500);
+    } else {
+      showMistake(true);
     }
-  });
+  };
+  if (isAuthorised === 'true') {
+    navigate('/');
+  }
   if (isAuthorised === 'true') {
     return <Loading />;
   }
@@ -33,29 +45,21 @@ export function Login(): ReactElement {
               className="login_input"
               onChange={(e): void => {
                 changeEmail(e.currentTarget.value);
+                showMistake(false);
               }}
             />
+            <Mistake text="This profile dose not exists" show={mistakeVisibility} />
             <p id="password_label">Password</p>
             <input
               type="password"
               className="login_input"
               onChange={(e): void => {
                 changePassword(e.currentTarget.value);
+                showMistake(false);
               }}
             />
           </form>
-          <button
-            className="login_button"
-            onClick={async (): Promise<void> => {
-              const promise = await logIn(email, password);
-              if (promise) {
-                changeTransState(false);
-                setTimeout(() => {
-                  navigate('/');
-                }, 500);
-              }
-            }}
-          >
+          <button className="login_button" onClick={logInHandler}>
             Log in
           </button>
           <div className="login_registration_div">
@@ -65,6 +69,7 @@ export function Login(): ReactElement {
                 className="sign_up_proposition"
                 onClick={(): void => {
                   changeTransState(false);
+                  // timeout for animation
                   setTimeout(() => goSignUp(navigate), 1000);
                 }}
               >

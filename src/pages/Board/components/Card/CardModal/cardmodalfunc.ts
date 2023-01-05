@@ -20,27 +20,21 @@ export function changeDescription(disabled: boolean): void {
 export function returnOnBoard(boardId: string, navigate: NavigateFunction): void {
   navigate(`/board/${boardId}`);
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function closeOnEscape(event: string, boardId: string, navigate: NavigateFunction): void {
-  // eslint-disable-next-line no-console
-  console.log(event);
-}
-export function saveDescription(
+export async function saveDescription(
   cardId: string | undefined,
   title: string | undefined,
   description: string,
   boardId: string | undefined,
   list_id: string | undefined,
   dispatch: Dispatch
-): void {
+): Promise<void> {
   try {
-    api
-      .put(`/board/${boardId}/card/${cardId}`, {
-        title,
-        description,
-        list_id,
-      })
-      .then((): Promise<void> => getBoard(dispatch, boardId || ''));
+    await api.put(`/board/${boardId}/card/${cardId}`, {
+      title,
+      description,
+      list_id,
+    });
+    await getBoard(dispatch, boardId || '');
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
@@ -53,31 +47,26 @@ function findList(lists: IList[], listId: string): IList | undefined {
   }
   return undefined;
 }
-export function transferCard(
+export async function transferCard(
   boardId: string,
   list_id: string,
   card: ICard | undefined,
   dispatch: Dispatch,
   lists: IList[]
-): void {
+): Promise<void> {
   const listMove = findList(lists, list_id);
   if (card !== undefined && listMove !== undefined) {
-    // eslint-disable-next-line no-console
-    console.log(card.id, listMove.cards.length + 1, list_id);
     try {
-      api
-        .put(`/board/${boardId}/card/`, [
-          {
-            id: `${card.id}`,
-            position: listMove.cards.length + 1,
-            list_id,
-          },
-        ])
-        .then((): Promise<void> => getBoard(dispatch, boardId || ''))
-        .then(() => {
-          const inListTitle = document.getElementById('in_list');
-          if (inListTitle !== null) inListTitle.innerHTML = listMove.title;
-        });
+      await api.put(`/board/${boardId}/card/`, [
+        {
+          id: `${card.id}`,
+          position: listMove.cards.length + 1,
+          list_id,
+        },
+      ]);
+      await getBoard(dispatch, boardId || '');
+      const inListTitle = await document.getElementById('in_list');
+      if (inListTitle !== null) inListTitle.innerHTML = listMove.title;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);

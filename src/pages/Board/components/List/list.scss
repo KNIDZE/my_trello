@@ -1,57 +1,53 @@
-:root{
-  --list-color: #ED693B;
-}
+@import "src/common/constants/styleConstants";
 @keyframes showUp {
   0%{width: 0; height: 0}
-  100%{width: 300px; min-height: 500px}
+  100%{width: 310px; min-height: 500px}
 }
 .list{
   position: relative;
-  background-color: var(--list-color);
+  background-color: $list_color;
   height: fit-content;
   animation: showUp 1s forwards;
   margin: 10px 20px 40px 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border: 5px solid black;
   border-radius: 50px;
   box-shadow: 0 3px 5px black ;
   flex-direction: column;
+  .delete_button{
+    background-color: var(--delete-color);
+    right: -10px;
+    display: none;
+    top: -10px;
+    height: 40px;
+    width: 40px;
+    border-radius: 50px;
+    z-index: 1;
+  }
+  &:hover{
+    .delete_button{
+      display: flex;
+    }
+  }
 }
 h2{
   text-align: center;
-  color: #070000;
+  color: black;
   background-color: #EDBF3B;
   width: 250px;
   height:35px;
   padding: 5px 0 5px 0;
   margin: 15px 15px 20px 15px;
-  border: 5px solid black;
   border-radius: 30px;
   outline: none;
   overflow: auto;
-}
-h2::-webkit-scrollbar{
-  width: auto;
-}
-h2:hover{
-  background-color: #f1c763;
-}
-
-.list .delete_button{
-  background-color: var(--delete-color);
-  border: 5px solid black;
-  right: -5px;
-  display: none;
-  top: -10px;
-  height: 30px;
-  width: 30px;
-  border-radius: 50px;
-  z-index: 1;
-}
-.list:hover .delete_button{
-  display: flex;
+  &:hover{
+    background-color: #f1c763;
+  }
+  &::-webkit-scrollbar{
+    width: auto;
+  }
 }
 @media (max-width: 450px) {
   .list{
