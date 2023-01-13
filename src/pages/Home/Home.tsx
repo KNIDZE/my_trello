@@ -37,7 +37,7 @@ export default function Home(): React.ReactElement {
       key={key.id}
       to={`/board/${key.id}`}
     >
-      <Board title={key.title} id={key.id} />
+      <Board title={key.title} id={key.id} boards={boards} />
     </Link>
   ));
   return (
@@ -45,7 +45,7 @@ export default function Home(): React.ReactElement {
       <h1 className="home_title">My boards</h1>
       <div className="container">
         {boardsList}
-        <BoardCreator />
+        <BoardCreator boards={boards} />
       </div>
       <LogOut />
     </section>

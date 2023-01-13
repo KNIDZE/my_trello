@@ -1,19 +1,18 @@
 @import "src/common/constants/styleConstants";
-@keyframes showUp {
-  0%{width: 0; height: 0}
-  100%{width: 310px; min-height: 500px}
-}
+
 .list{
   position: relative;
   background-color: $list_color;
   height: fit-content;
   animation: showUp 1s forwards;
   margin: 10px 20px 40px 20px;
+  width: 310px;
+  min-height: 500px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   border-radius: 50px;
-  box-shadow: 0 3px 5px black ;
+  box-shadow: $main_shadow;
   flex-direction: column;
   .delete_button{
     background-color: var(--delete-color);
@@ -38,7 +37,7 @@ h2{
   width: 250px;
   height:35px;
   padding: 5px 0 5px 0;
-  margin: 15px 15px 20px 15px;
+  margin: 15px 15px 5px 15px;
   border-radius: 30px;
   outline: none;
   overflow: auto;

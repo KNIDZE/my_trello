@@ -4,6 +4,7 @@
   align-items: center;
   cursor: pointer;
   margin-top: 10px;
+  box-shadow: $main_shadow;
 }
 .add_list_label p{
   width: 100%;
@@ -16,9 +17,9 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  box-shadow: $main_shadow;
   input{
     outline: none;
-    margin-bottom: 5px;
     background-color: #f1c763;
     border-radius: 15px;
     width: 85%;

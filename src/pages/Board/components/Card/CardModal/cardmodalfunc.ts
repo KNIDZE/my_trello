@@ -17,12 +17,12 @@ export function changeDescription(disabled: boolean): void {
     input.removeAttribute('placeholder');
   }
 }
-export function returnOnBoard(boardId: string, navigate: NavigateFunction): void {
-  navigate(`/board/${boardId}`);
+export async function returnOnBoard(boardId: string, navigate: NavigateFunction): Promise<void> {
+  await navigate(`/board/${boardId}`);
 }
 export async function saveDescription(
-  cardId: string | undefined,
-  title: string | undefined,
+  cardId: number,
+  title: string,
   description: string,
   boardId: string | undefined,
   list_id: string | undefined,
@@ -40,16 +40,16 @@ export async function saveDescription(
     console.log(e);
   }
 }
-function findList(lists: IList[], listId: string): IList | undefined {
+function findList(lists: IList[], listId: number): IList | undefined {
   // eslint-disable-next-line no-restricted-syntax
   for (const list of lists) {
-    if (list.id === +listId) return list;
+    if (list.id === listId) return list;
   }
   return undefined;
 }
 export async function transferCard(
   boardId: string,
-  list_id: string,
+  list_id: number,
   card: ICard | undefined,
   dispatch: Dispatch,
   lists: IList[]

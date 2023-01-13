@@ -1,4 +1,28 @@
+@import "src/common/constants/styleConstants";
 .warning{
   font-size: 14px;
   color: #ED8C6B;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+.add_list_form{
+  .warning{
+    text-align: center;
+    margin-bottom: 5px;
+  }
+}
+.table_title_div{
+  .warning{
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+  }
+}
+.list{
+  .warning{
+    color: $bg_color;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 }

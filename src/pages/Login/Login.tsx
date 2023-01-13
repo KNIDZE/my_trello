@@ -13,19 +13,23 @@ export function Login(): ReactElement {
   const [password, changePassword] = useState('');
   const [transState, changeTransState] = useState(true);
   const [mistakeVisibility, showMistake] = useState(false);
+  const [buttonDisabled, disableButton] = useState(false);
   const isAuthorised = localStorage.getItem('is_auth');
   const ref = useRef(null);
   const dispatch = useDispatch();
+  // button handler
   const logInHandler = async (): Promise<void> => {
+    await disableButton(true);
     const promise = await logIn(email, password, dispatch);
     if (promise) {
-      changeTransState(false);
-      setTimeout(() => {
+      await changeTransState(false);
+      await setTimeout(() => {
         navigate('/');
       }, 500);
     } else {
-      showMistake(true);
+      await showMistake(true);
     }
+    await disableButton(false);
   };
   if (isAuthorised === 'true') {
     navigate('/');
@@ -59,7 +63,7 @@ export function Login(): ReactElement {
               }}
             />
           </form>
-          <button className="login_button" onClick={logInHandler}>
+          <button disabled={buttonDisabled} className="login_button" onClick={logInHandler}>
             Log in
           </button>
           <div className="login_registration_div">

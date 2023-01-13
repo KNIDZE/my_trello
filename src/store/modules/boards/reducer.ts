@@ -10,6 +10,16 @@ export default function reducer(state = initialState, action: {type: string, pay
         ...state,
         boards: action.payload
       }
+    case 'ADD_BOARD':
+      return {
+        ...state,
+        boards: action.payload
+      }
+    case "DELETE_BOARD":
+      return {
+        ...state,
+        boards: action.payload
+      }
     default: {
       return {...state, ...action.payload};
     }

@@ -7,8 +7,8 @@ import api from '../../api/request';
 async function logOut(navigate: NavigateFunction): Promise<void> {
   await api.post('/refresh', { refreshToken: localStorage.getItem('refresh_token') });
   await localStorage.removeItem('user_token');
-  await localStorage.setItem('is_auth', 'false');
-  await navigate('/login');
+  localStorage.setItem('is_auth', 'false');
+  navigate('/login');
 }
 export function LogOut(): ReactElement {
   const navigate = useNavigate();

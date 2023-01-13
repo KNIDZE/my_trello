@@ -9,33 +9,29 @@ export function comparePositionCard(a: ICard, b: ICard): number {
   if (a.position > b.position) return 1;
   return 0;
 }
-interface ShortListInfo {
-  title: string;
-  id: string;
-}
-export function findListCard(lists: IList[], id: string): { card: ICard | undefined; list: ShortListInfo } {
-  let resultCard;
-  const listTitle = document.getElementById(`card_box_${id}`)?.parentElement?.children[1].innerHTML;
-  const listId = document.getElementById(`card_box_${id}`)?.parentElement?.id;
+export function findListCard(lists: IList[], id: string): { card: ICard; list: IList } {
+  let resultCard = lists[0].cards[0];
+  let resultList = lists[0];
   lists.forEach((list) => {
     list.cards.forEach((card) => {
       if (card.id === +id) {
         resultCard = card;
+        resultList = list;
       }
     });
   });
   return {
     card: resultCard,
-    list: {
-      title: listTitle || '',
-      id: listId?.slice(5) || '',
-    },
+    list: resultList,
   };
 }
 
-export function notValidString(string: string, putElementId: string): void {
-  const element = document.getElementById(putElementId);
-  if (element !== null) {
-    element.innerHTML = string === '' ? "String shouldn't be empty" : 'String must contain only letters, numbers, -, _';
+export function notValidString(title: string, titleDuplication = false): string {
+  if (titleDuplication) {
+    return 'This title exists';
   }
+  if (title.length === 0) {
+    return 'Empty title';
+  }
+  return 'Only letters, numbers, _, -';
 }

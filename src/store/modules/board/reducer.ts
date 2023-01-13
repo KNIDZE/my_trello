@@ -3,8 +3,9 @@
 
 const initialState = {
   showLabel: true,
-  board: {lists: []},
+  board: {title: '', lists: [], id: undefined},
   cardText: '',
+  cardModal: {card: null, list: null},
 };
 
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
@@ -28,10 +29,10 @@ export default function reducer(state = initialState, action: { type: string, pa
         ...state,
         board : {id: undefined, title: '', lists: []} ,
       };
-    case 'CHANGE_ADD_BOARD':
+    case 'ADD_LIST':
       return {
         ...state,
-        showLabel: !state.showLabel
+        board: {title: state.board.title, id: state.board.id, lists: action.payload}
       };
     case 'SAVE_LIST_TITLE':
       return {
@@ -43,9 +44,10 @@ export default function reducer(state = initialState, action: { type: string, pa
         ...state,
         cardText : action.payload,
       }
-    case 'CARD_TO_SLOT':
+    case 'DELETE_LIST':
       return {
-
+        ...state,
+        board: {title: state.board.title, id: state.board.id, lists: action.payload}
       }
     default: {
       return { ...state };

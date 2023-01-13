@@ -1,8 +1,4 @@
 @import "src/common/constants/styleConstants";
-@keyframes showUpCard {
-  0%{opacity: 0}
-  100%{opacity: 1}
-}
 .inner_text{
   font-size: 18px;
   resize: none;
@@ -13,7 +9,6 @@
   background-color: inherit;
   font-family: inherit;
   outline: none;
-;
 }
 
 .inner_text::-webkit-scrollbar{
@@ -21,9 +16,10 @@
 }
 .card p{
   padding: 0;
-  margin: 0;
+  margin: 7px 0 0 0;
 }
 .card, .card_slot{
+  cursor: pointer;
   margin: 0 auto auto auto;
   height: 70px;
   padding: 0;
@@ -36,6 +32,7 @@
   margin-bottom: 15px;
 }
 .card{
+  box-shadow: $main_shadow;
   animation: showUpCard 0.5s forwards ease-in;
   width: 240px;
   padding: 0 2.5% 0 2.5%;

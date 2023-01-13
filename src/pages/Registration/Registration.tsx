@@ -11,6 +11,7 @@ import { Mistake } from '../../common/Mistake/Mistake';
 export function Registration(): ReactElement {
   const navigate = useNavigate();
   const ref = useRef(null);
+  const dispatch = useDispatch();
   const [password, changePassword] = useState('');
   const [email, changeEmail] = useState('');
   const [secondPassword, changeSecondPassword] = useState('');
@@ -26,6 +27,7 @@ export function Registration(): ReactElement {
       navigate('/');
     }
   });
+  const [buttonDisabled, disableButton] = useState(false);
   const newValidationState = {
     email: emailValidation(email),
     password: isPasswordCorrect(),
@@ -79,7 +81,11 @@ export function Registration(): ReactElement {
           </form>
           <button
             className="login_button"
-            onClick={(): void => signUp(registration, email, password, navigate, useDispatch())}
+            disabled={buttonDisabled}
+            onClick={(): void => {
+              disableButton(true);
+              signUp(registration, email, password, navigate, dispatch).then(() => disableButton(false));
+            }}
           >
             Sign up
           </button>

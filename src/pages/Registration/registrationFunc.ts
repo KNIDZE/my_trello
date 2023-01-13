@@ -58,18 +58,18 @@ function registration(email: string, password: string, navigate: NavigateFunctio
     });
 }
 
-export function signUp(
+export async function signUp(
   allowed: ValidationProps,
   email: string,
   password: string,
   navigate: NavigateFunction,
   dispatch: Dispatch
-): void {
+): Promise<void> {
   const allowReg = allowed.confirm && allowed.email && allowed.password;
-  localStorage.removeItem('user_token');
+  await localStorage.removeItem('user_token');
   // eslint-disable-next-line no-alert,@typescript-eslint/no-unused-expressions
   if (allowReg) {
     // hasAccount();
-    registration(email, password, navigate, dispatch);
+    await registration(email, password, navigate, dispatch);
   }
 }
