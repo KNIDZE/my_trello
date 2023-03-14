@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
 import './list.scss';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
 import { Dispatch } from 'redux';
-import { ICard } from '../../../../common/interfaces/ICard.t';
-import Card from '../Card/Card';
 import { delList, renameList } from '../../../../store/modules/board/actions';
 import CardCreator from '../CardCreator/CardCreator';
-import { dragEnterHandler } from '../Card/dragNdrop';
-import Slot from '../Slot/Slot';
 import { comparePositionCard, isStringValid, notValidString } from '../../../../common/commonFunctions';
 import IList from '../../../../common/interfaces/IList';
 import { Mistake } from '../../../../common/Mistake/Mistake';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { addEmptySlot, dropHandler, removeDraggedSlot } from '../Card/dragNdrop';
+import CardSlot from '../Slot/Slot';
+import { BoardState } from '../../../../common/interfaces/BoardInterfaces';
+import { ICard } from '../../../../common/interfaces/ICard.t';
 
 export function renameListOrError(dispatch: Dispatch, title: string, listId: string, boardId: string): void {
   if (isStringValid(title)) renameList(dispatch, title, listId, boardId);
 }
-export default function List(props: { title: string; cards: ICard[]; id: number; lists: IList[] }): React.ReactElement {
-  const { title, cards, id, lists } = props;
+const mapStateToProps = (state: BoardState): { lists: IList[]; dragCard: ICard } => ({
+  lists: state.board.board.lists,
+  dragCard: state.board.draggedCard,
+});
+
+export default function List(props: { id: number }): React.ReactElement {
+  const { id } = props;
+  const { lists, dragCard } = useSelector(mapStateToProps);
+  const { title, cards } = lists.filter((list) => list.id === id)[0];
   const dispatch = useDispatch();
   const { boardId } = useParams();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [listTitle, setTitle] = useState(title);
-  const cardsList = cards.sort(comparePositionCard).map((key) => (
-    <div key={key.id} className="card_box" id={`card_box_${key.id}`}>
-      <Slot id={key.id} />
-      <Card card={key} list={props} />
-    </div>
-  ));
+  const [listCards, setCards] = useState(cards);
   const [mistake, setMistake] = useState({
     show: false,
     text: 'Empty',
@@ -43,7 +45,33 @@ export default function List(props: { title: string; cards: ICard[]; id: number;
     });
   }
   return (
-    <div className="list" id={`list_${id}`} onDragEnter={(e): void => dragEnterHandler(e, boardId || '', dispatch)}>
+    <div
+      className="list"
+      id={`list_${id}`}
+      onDrop={(): void => {
+        setCards(dropHandler(dragCard, id, boardId, lists, dispatch).cards);
+      }}
+      onDragEnter={(e): void => {
+        if (e.relatedTarget) {
+          if (e.currentTarget.contains(e.relatedTarget as Node)) {
+            return;
+          }
+        }
+        const result = addEmptySlot(listCards, id);
+        setCards(result);
+        // eslint-disable-next-line no-console
+        console.log('dich');
+      }}
+      onDragLeave={(e): void => {
+        if (e.relatedTarget) {
+          if (e.currentTarget.contains(e.relatedTarget as Node)) {
+            return;
+          }
+        }
+        const result = removeDraggedSlot(listCards, dragCard.id);
+        setCards(result);
+      }}
+    >
       <div
         className="delete_button"
         onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString(), lists)}
@@ -51,7 +79,6 @@ export default function List(props: { title: string; cards: ICard[]; id: number;
         <CgCloseO color="white" size={100} />
       </div>
       <h2
-        id={`list_title_${id}`}
         contentEditable="true"
         suppressContentEditableWarning
         onInput={(event): void => {
@@ -76,8 +103,10 @@ export default function List(props: { title: string; cards: ICard[]; id: number;
         {title}
       </h2>
       <Mistake text={mistake.text} show={mistake.show} />
-      {cardsList}
-      <CardCreator listId={id.toString()} lastCardPos={cardsList.length} />
+      {listCards.sort(comparePositionCard).map((key) => (
+        <CardSlot key={key.id} id={key.id} card={key} />
+      ))}
+      <CardCreator listId={id.toString()} lastCardPos={cards.length} />
     </div>
   );
 }

@@ -1,121 +1,83 @@
 import React from 'react';
 import { Dispatch } from 'redux';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { getBoard, updateCards } from '../../../../store/modules/board/actions';
+import { ICard } from '../../../../common/interfaces/ICard.t';
+import IList from '../../../../common/interfaces/IList';
+import { getBoard, setDragCard, updateLists } from '../../../../store/modules/board/actions';
+import api from '../../../../api/request';
 
-export const dragStartHandler = (e: React.DragEvent, title: string, id: number, listId: number): void => {
-  e.dataTransfer.setData('html/text', `${id}|${listId}`);
-  e.dataTransfer.effectAllowed = 'all';
-  // create dragImage
-  const ghostImage = document.createElement('div');
-  ghostImage.classList.add('card', 'dragImage');
-  ghostImage.innerHTML = title;
-  const card = document.getElementById(id.toString());
-  const box = document.getElementById(`card_box_${id.toString()}`);
-  card?.appendChild(ghostImage);
-  e.dataTransfer.setDragImage(ghostImage, 150, 35);
-  setTimeout(() => {
-    box?.classList.add('hidden');
-  }, 0);
+export const dragStartHandler = (e: React.DragEvent, card: ICard, dispatch: Dispatch): void => {
+  e.dataTransfer.setDragImage(e.currentTarget as HTMLImageElement, 0, 0);
+  e.dataTransfer.setData('text', `${card.id}`);
+  setDragCard(card, dispatch);
 };
 
-function hasExtraCard(listChildren: HTMLCollection): boolean {
-  let child;
-  for (let i = 0; i < listChildren.length; i++) {
-    child = listChildren.item(i);
-    if (child !== null && child.id !== null) {
-      if (child.id === 'extra_box') {
-        return true;
+// Searching a card that we drag. Move card info to drop list.
+
+function transferCard(card_id: string, boardLists: IList[], listId: number): IList[] {
+  let curCard: ICard = { id: 0, title: '', listId, position: 0 };
+  const lists: IList[] = [];
+  boardLists.forEach((list) => {
+    const newList: IList = { id: list.id, title: list.title, cards: [] };
+    list.cards.forEach((card) => {
+      if (card.id === +card_id) {
+        curCard = card;
+      } else {
+        newList.cards.push(card);
       }
+    });
+    lists.push(newList);
+  });
+  lists.forEach((list) => {
+    if (list.id === listId) {
+      curCard.position = list.cards.length + 1;
+      list.cards.push(curCard);
     }
-  }
-  return false;
+  });
+  return lists;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function dropHandler(e: DragEvent | React.DragEvent, boardId: string, dispatch: Dispatch): void {
-  const dataTransfer = e.dataTransfer?.getData('html/text') || '';
-  const dragCardId = dataTransfer.split('|')[0];
-  const previousListId = dataTransfer.split('|')[1];
-  const newPosition = document.getElementById('extra_box');
-  if (newPosition !== null) {
-    newPosition.id = `card_box_${dragCardId}`;
-    updateCards(boardId, newPosition.parentElement?.children, newPosition.parentElement?.id);
-    const removeHiddenClass = `list_${previousListId}` === newPosition.parentElement?.id;
-    newPosition.remove();
-    const card = document.getElementById(`card_box_${dragCardId}`);
-    if (removeHiddenClass) {
-      if (card?.lastChild !== null && card?.lastChild?.lastChild !== null)
-        card?.lastChild.removeChild(card.lastChild.lastChild);
-    }
-    getBoard(dispatch, boardId).then(() => {
-      card?.classList.remove('hidden');
+function hasEmptySlot(cards: ICard[]): boolean {
+  let result = false;
+  cards.forEach((card) => {
+    if (card.id === -1) result = true;
+  });
+  return result;
+}
+export const addEmptySlot = (cards: ICard[], listId: number): ICard[] => {
+  if (!hasEmptySlot(cards)) {
+    cards.push({
+      id: -1,
+      position: cards.length + 1,
+      title: '',
+      listId,
     });
   }
-}
-export function removeExtraBox(): void {
-  document.getElementById('extra_box')?.remove();
-}
+  return cards;
+};
 
-// adding extra box to given position
-function addExtraBox(e: React.DragEvent, boardId: string, dispatch: Dispatch): HTMLElement {
-  const cardDiv = document.createElement('div');
-  cardDiv.className = 'card_box';
-  cardDiv.id = `extra_box`;
-  function createSlot(): Element {
-    const slot = document.createElement('div');
-    slot.addEventListener('drop', (event) => dropHandler(event, boardId, dispatch));
-    slot.className = 'card_slot';
-    return slot;
-  }
-  cardDiv.appendChild(createSlot());
-  return cardDiv;
-}
-function insertBox(
-  listChild: HTMLCollection,
-  e: React.DragEvent,
-  curList: EventTarget & Element,
-  boardId: string,
+export const removeEmptySlot = (cards: ICard[]): ICard[] => cards.filter((card) => card.id !== -1);
+
+export const removeDraggedSlot = (cards: ICard[], cardId: number): ICard[] => {
+  const result = cards.filter((card) => card.id !== +cardId);
+  return removeEmptySlot(result);
+};
+
+export const dropHandler = (
+  card: ICard,
+  listId: number,
+  boardId: string | undefined,
+  boardLists: IList[],
   dispatch: Dispatch
-): void {
-  for (let i = 2; i < listChild.length - 1; i++) {
-    const prevChildCenter =
-      listChild[i - 1].getBoundingClientRect().y + listChild[i - 1].getBoundingClientRect().height / 2;
-    const thisChildCenter = listChild[i].getBoundingClientRect().y + listChild[i].getBoundingClientRect().height / 2;
-    const nextChildCenter =
-      listChild[i + 1].getBoundingClientRect().y + listChild[i + 1].getBoundingClientRect().height / 2;
-    if (prevChildCenter < e.clientY && e.clientY < thisChildCenter) {
-      if (curList !== null && !hasExtraCard(curList.children)) {
-        const cardDiv = addExtraBox(e, boardId, dispatch);
-        curList.insertBefore(cardDiv, listChild[i]);
-      }
-    } else if (e.clientY < nextChildCenter && e.clientY > thisChildCenter) {
-      if (curList !== null && !hasExtraCard(curList.children)) {
-        const cardDiv = addExtraBox(e, boardId, dispatch);
-        curList.insertBefore(cardDiv, listChild[i + 1]);
-      }
-    }
-  }
-}
-export const dragEnterHandler = (e: React.DragEvent, boardId: string, dispatch: Dispatch): void => {
-  const listChildren = e.currentTarget.children;
-  const curList = e.currentTarget;
-  removeExtraBox();
-  const lastElementRect = listChildren[e.currentTarget.children.length - 1].getBoundingClientRect();
-  e.preventDefault();
-
-  if (
-    e.clientX >= curList?.getBoundingClientRect().x &&
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    e.clientX <= curList?.getBoundingClientRect().x + curList?.getBoundingClientRect().width
-  ) {
-    if (e.clientY > lastElementRect.y) {
-      if (curList !== null && !hasExtraCard(listChildren)) {
-        const cardDiv = addExtraBox(e, boardId, dispatch);
-        curList.insertBefore(cardDiv, curList.lastChild);
-      }
-      e.dataTransfer.dropEffect = 'move';
-    } else {
-      insertBox(listChildren, e, curList, boardId, dispatch);
-    }
-  }
+): IList => {
+  const lists = transferCard(`${card.id}`, boardLists, listId);
+  api.put(`/board/${boardId}/card`, [
+    {
+      id: card.id,
+      position: card.position,
+      list_id: listId,
+    },
+  ]);
+  updateLists(lists, dispatch);
+  const result = lists.filter((list) => list.id === listId)[0];
+  if (boardId) getBoard(dispatch, boardId);
+  return result;
 };

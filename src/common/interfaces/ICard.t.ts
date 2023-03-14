@@ -3,5 +3,5 @@ export interface ICard {
   title: string;
   position: number;
   listId: number;
-  description: string;
+  description?: string;
 }

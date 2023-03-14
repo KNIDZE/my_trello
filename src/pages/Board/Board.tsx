@@ -7,30 +7,13 @@ import List from './components/List/List';
 import AddListButton from './components/addListButton/AddListButton';
 import { clearBoardState, getBoard } from '../../store/modules/board/actions';
 import Loading from '../Home/components/Loading/Loading';
-import { dropHandler } from './components/Card/dragNdrop';
-import IList from '../../common/interfaces/IList';
 import { LogOut } from '../../common/LogOut/LogOut';
 import { isStringValid, notValidString } from '../../common/commonFunctions';
 import api from '../../api/request';
 import { getBoards } from '../../store/modules/boards/actions';
 import { Mistake } from '../../common/Mistake/Mistake';
 import { CardModal } from './components/Card/CardModal/CardModal';
-
-interface BoardInterface {
-  title: string;
-  lists: IList[];
-}
-
-interface BoardState {
-  board: { board: BoardInterface };
-}
-
-interface BoardProps {
-  board: {
-    title: string;
-    lists: IList[];
-  };
-}
+import { BoardProps, BoardState } from '../../common/interfaces/BoardInterfaces';
 
 const mapStateToProps = (state: BoardState): BoardProps => ({
   board: state.board.board,
@@ -78,18 +61,12 @@ export default function Board(): JSX.Element {
     getBoard(dispatch, boardId || '');
     return <Loading />;
   }
-  const renderList = board.lists.map((key) => (
-    <List key={key.id} title={key.title} cards={key.cards} id={key.id} lists={board.lists} />
-  ));
   return (
     <section
       className="board_section"
       onDragOver={(e): void => {
         e.preventDefault();
         e.stopPropagation();
-      }}
-      onDrop={(e): void => {
-        dropHandler(e, `${boardId}`, dispatch);
       }}
     >
       <div className="table_title_div">
@@ -122,7 +99,9 @@ export default function Board(): JSX.Element {
         <Mistake text={mistake.text} show={mistake.show} />
       </div>
       <div className="container" id="board_container">
-        {renderList}
+        {board.lists.map((key) => (
+          <List key={key.id} id={key.id} />
+        ))}
         <div className="button_column">
           <AddListButton lists={board.lists} position={board.lists.length + 1} />
         </div>

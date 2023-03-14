@@ -92,7 +92,6 @@ export async function delCard(dispatch: Dispatch, boardId: string, cardId: numbe
     dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function updateCards(boardId: string, cards: HTMLCollection | undefined, listId: string | undefined): void {
   try {
     const objectList = [];
@@ -122,4 +121,12 @@ export async function renameCard(
     });
     await getBoard(dispatch, boardId);
   }
+}
+
+export function updateLists(lists: IList[], dispatch: Dispatch): void {
+  dispatch({ type: 'UPDATE_LISTS', payload: lists });
+}
+
+export function setDragCard(card: ICard, dispatch: Dispatch): void {
+  dispatch({ type: 'SET_DRAG_CARD', payload: card });
 }
