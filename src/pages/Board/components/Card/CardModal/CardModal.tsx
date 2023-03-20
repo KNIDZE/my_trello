@@ -3,9 +3,9 @@ import './cardmodal.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
-import { changeDescription, copyText, returnOnBoard, saveDescription, transferCard } from './cardmodalfunc';
+import { changeDescription, copyText, deleteCard, returnOnBoard, saveDescription, transferCard } from './cardmodalfunc';
 import { findListCard, isStringValid, notValidString } from '../../../../../common/commonFunctions';
-import { delCard, renameCard } from '../../../../../store/modules/board/actions';
+import { renameCard } from '../../../../../store/modules/board/actions';
 import { Mistake } from '../../../../../common/Mistake/Mistake';
 import IList from '../../../../../common/interfaces/IList';
 
@@ -148,7 +148,7 @@ export function CardModal(): ReactElement | null {
           <button
             className="action delete_action_button"
             onClick={(): void => {
-              delCard(dispatch, boardId || '', card.id);
+              deleteCard(dispatch, boardId || '', card.id, lists, list.id);
               returnOnBoard(boardId || '', navigate);
             }}
           >

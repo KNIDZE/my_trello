@@ -7,7 +7,7 @@ export interface BoardInterface {
 }
 
 export interface BoardState {
-  board: { board: BoardInterface; draggedCard: ICard };
+  board: { board: BoardInterface; draggedCard: ICard; slotPosition: number };
 }
 
 export interface BoardProps {
@@ -15,4 +15,6 @@ export interface BoardProps {
     title: string;
     lists: IList[];
   };
+  draggedCard: ICard;
+  slotPosition: number;
 }

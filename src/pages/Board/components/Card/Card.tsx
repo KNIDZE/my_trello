@@ -4,10 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
+import { setSlotPosition } from '../../../../store/modules/board/actions';
 
 type Visible = 'visible' | 'hidden';
-export default function Card(props: { card: ICard }): React.ReactElement {
-  const { card } = props;
+export default function Card(props: { card: ICard; listId: number }): React.ReactElement {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { card, listId } = props;
   const navigate = useNavigate();
   const path = useLocation();
   const dispatch = useDispatch();
@@ -25,13 +27,18 @@ export default function Card(props: { card: ICard }): React.ReactElement {
       draggable="true"
       style={{ visibility }}
       onDragStart={(e): void => {
-        dragStartHandler(e, card, dispatch);
+        dragStartHandler(e, card, listId, dispatch);
         // Card not disappears from initial list if there isn't Timeout
         setTimeout(() => setVisibility('hidden'), 1);
       }}
       onDragEnd={(): void => setVisibility('visible')}
       onClick={(): void => {
         navigate(`${path.pathname}/card/${card.id}`);
+      }}
+      onDragOver={(e): void => {
+        const elementRect = e.currentTarget.getBoundingClientRect();
+        if (e.clientY > elementRect.y + elementRect.height / 2) setSlotPosition(card.position + 0.5, dispatch);
+        if (e.clientY <= elementRect.y + elementRect.height / 2) setSlotPosition(card.position - 0.5, dispatch);
       }}
     >
       <p className="inner_text">{card.title}</p>

@@ -26,13 +26,11 @@
   margin-bottom: 15px;
 }
 .card{
-  position: absolute;
-  left: 0;
-  top: 0;
   box-shadow: $main_shadow;
   animation: showUpCard 0.5s forwards ease-in;
   width: 240px;
   padding: 0 2.5% 0 2.5%;
+  margin: 0 0 20px 0;
   height: 70px;
   background-color: $card_color;
   border-radius: 20px;

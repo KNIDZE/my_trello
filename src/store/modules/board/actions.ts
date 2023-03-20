@@ -6,25 +6,17 @@ import { ICard } from '../../../common/interfaces/ICard.t';
 
 interface Board {
   title: string;
-  lists: [{ id: number; position: number }];
+  lists: IList[];
 }
 
-function changeListsPosition(board: Board): { id: number; position: number }[] {
-  const result = [];
-  for (let i = 0; i < board.lists.length; i++) {
-    const changeList = { id: board.lists[i].id, position: i + 1 };
-    result.push(changeList);
-  }
-  return result;
-}
 export function clearBoardState(dispatch: Dispatch): void {
   dispatch({ type: 'CLEAR_BOARD' });
 }
 export async function getBoard(dispatch: Dispatch, id: string): Promise<void> {
   try {
-    let board: Board = await api.get(`/board/${id}`);
-    await api.put(`/board/${id}/list`, changeListsPosition(board));
-    board = await api.get(`/board/${id}`);
+    const board: Board = await api.get(`/board/${id}`);
+    // await api.put(`/board/${id}/list`, changeListsPosition(board));
+    // board = await api.get(`/board/${id}`);
     await dispatch({ type: 'LOAD_BOARD', payload: board });
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -56,7 +48,7 @@ export async function addNewList(
 export async function delList(dispatch: Dispatch, boardId: string, listId: string, lists: IList[]): Promise<void> {
   try {
     const newLists = lists.filter((list) => list.id === +listId);
-    dispatch({ type: 'DELETE_LIST', payload: newLists });
+    dispatch({ type: 'CHANGE_LISTS', payload: newLists });
     await api.delete(`/board/${boardId}/list/${listId}`).then(() => getBoard(dispatch, boardId));
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -81,8 +73,9 @@ export function getCurrentBoard(dispatch: Dispatch, boardId: string): void {
   dispatch({ type: 'SET_CURRENT_CARD', payload: boardId });
 }
 
-export async function delCard(dispatch: Dispatch, boardId: string, cardId: number): Promise<void> {
+export async function delCard(dispatch: Dispatch, boardId: string, cardId: number, lists: IList[]): Promise<void> {
   try {
+    dispatch({ type: 'CHANGE_LISTS', payload: lists });
     await api.delete(`/board/${boardId}/card/${cardId}`).then(() => {
       getBoard(dispatch, boardId);
     });
@@ -113,7 +106,6 @@ export async function renameCard(
   list_id: number,
   dispatch: Dispatch
 ): Promise<void> {
-  // eslint-disable-next-line no-console
   if (isStringValid(text)) {
     await api.put(`/board/${boardId}/card/${cardId}`, {
       title: text.trim(),
@@ -129,4 +121,7 @@ export function updateLists(lists: IList[], dispatch: Dispatch): void {
 
 export function setDragCard(card: ICard, dispatch: Dispatch): void {
   dispatch({ type: 'SET_DRAG_CARD', payload: card });
+}
+export function setSlotPosition(position: number, dispatch: Dispatch): void {
+  dispatch({ type: 'SET_SLOT_POSITION', payload: position });
 }

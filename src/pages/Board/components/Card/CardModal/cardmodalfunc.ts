@@ -1,7 +1,7 @@
 import { NavigateFunction } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import api from '../../../../../api/request';
-import { getBoard } from '../../../../../store/modules/board/actions';
+import { delCard, getBoard } from '../../../../../store/modules/board/actions';
 import { ICard } from '../../../../../common/interfaces/ICard.t';
 import IList from '../../../../../common/interfaces/IList';
 
@@ -76,4 +76,18 @@ export async function transferCard(
 export function copyText(): void {
   const area = document.getElementById('description');
   navigator.clipboard.writeText(area?.innerHTML || '');
+}
+
+export function deleteCard(dispatch: Dispatch, boardId: string, cardId: number, lists: IList[], listId: number): void {
+  const newListsValue = lists.map((list) => {
+    if (list.id === listId) {
+      return {
+        id: list.id,
+        title: list.title,
+        cards: list.cards.filter((card) => card.id !== cardId),
+      };
+    }
+    return list;
+  });
+  delCard(dispatch, boardId, cardId, newListsValue);
 }

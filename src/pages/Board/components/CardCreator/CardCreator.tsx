@@ -6,18 +6,23 @@ import { Dispatch } from 'redux';
 import { useDispatch } from 'react-redux';
 import { getBoard } from '../../../../store/modules/board/actions';
 import api from '../../../../api/request';
+import { ICard } from '../../../../common/interfaces/ICard.t';
 
 async function createCard(
   text: string,
-  list_id: string,
+  listId: string,
   boardId: string,
   position: number,
+  changeList: React.Dispatch<React.SetStateAction<ICard[]>>,
+  cards: ICard[],
   dispatch: Dispatch
 ): Promise<void> {
   if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
+    cards.push({ title: text, id: -20, position, listId: +listId });
+    changeList(cards);
     await api.post(`/board/${boardId}/card`, {
       title: text,
-      list_id,
+      list_id: listId,
       position,
       description: ' ',
       custom: '',
@@ -29,8 +34,13 @@ async function createCard(
   }
 }
 
-export default function CardCreator(props: { listId: string; lastCardPos: number }): React.ReactElement {
-  const { listId, lastCardPos } = props;
+export default function CardCreator(props: {
+  listId: string;
+  lastCardPos: number;
+  cards: ICard[];
+  changeList: React.Dispatch<React.SetStateAction<ICard[]>>;
+}): React.ReactElement {
+  const { listId, lastCardPos, cards, changeList } = props;
   const { boardId } = useParams();
   const dispatch = useDispatch();
   const [showCreator, changeCreatorVisibility] = useState(false);
@@ -57,7 +67,7 @@ export default function CardCreator(props: { listId: string; lastCardPos: number
           disabled={buttonDisabled}
           onClick={(): void => {
             disableButton(true);
-            createCard(cardText, listId, boardId || '', lastCardPos + 1, dispatch);
+            createCard(cardText, listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
             changeCreatorVisibility(false);
             disableButton(false);
           }}

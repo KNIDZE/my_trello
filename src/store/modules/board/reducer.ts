@@ -3,6 +3,8 @@
 
 const initialState = {
   board: {title: '', lists: [], id: undefined},
+  slotPosition: -1,
+  draggedCard: {id: 0, listId: 0, title: '', description: '', position: 0}
 };
 
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
@@ -31,7 +33,7 @@ export default function reducer(state = initialState, action: { type: string, pa
         ...state,
         board: {title: state.board.title, id: state.board.id, lists: action.payload}
       };
-    case 'DELETE_LIST':
+    case 'CHANGE_LISTS':
       return {
         ...state,
         board: {title: state.board.title, id: state.board.id, lists: action.payload}
@@ -40,6 +42,11 @@ export default function reducer(state = initialState, action: { type: string, pa
       return {
         ...state,
         draggedCard: action.payload
+      }
+    case 'SET_SLOT_POSITION':
+      return {
+        ...state,
+        slotPosition: action.payload
       }
     case 'UPDATE_LISTS':
       return {

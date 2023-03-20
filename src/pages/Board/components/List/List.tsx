@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useEffect, useState } from 'react';
 import './list.scss';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
 import { Dispatch } from 'redux';
 import { delList, renameList } from '../../../../store/modules/board/actions';
@@ -9,28 +10,29 @@ import CardCreator from '../CardCreator/CardCreator';
 import { comparePositionCard, isStringValid, notValidString } from '../../../../common/commonFunctions';
 import IList from '../../../../common/interfaces/IList';
 import { Mistake } from '../../../../common/Mistake/Mistake';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { addEmptySlot, dropHandler, removeDraggedSlot } from '../Card/dragNdrop';
+import { dropHandler, removeDraggedCard } from '../Card/dragNdrop';
 import CardSlot from '../Slot/Slot';
-import { BoardState } from '../../../../common/interfaces/BoardInterfaces';
 import { ICard } from '../../../../common/interfaces/ICard.t';
+import Card from '../Card/Card';
 
+interface ListProps {
+  lists: IList[];
+  dragCard: ICard;
+  slotPosition: number;
+  id: number;
+}
 export function renameListOrError(dispatch: Dispatch, title: string, listId: string, boardId: string): void {
   if (isStringValid(title)) renameList(dispatch, title, listId, boardId);
 }
-const mapStateToProps = (state: BoardState): { lists: IList[]; dragCard: ICard } => ({
-  lists: state.board.board.lists,
-  dragCard: state.board.draggedCard,
-});
 
-export default function List(props: { id: number }): React.ReactElement {
-  const { id } = props;
-  const { lists, dragCard } = useSelector(mapStateToProps);
+export default function List(props: ListProps): React.ReactElement {
+  const { lists, dragCard, slotPosition, id } = props;
   const { title, cards } = lists.filter((list) => list.id === id)[0];
   const dispatch = useDispatch();
   const { boardId } = useParams();
   const [listTitle, setTitle] = useState(title);
-  const [listCards, setCards] = useState(cards);
+  const [listCards, setCards] = useState(cards.slice(0));
+  const [slotVisible, setSlotVisibility] = useState(false);
   const [mistake, setMistake] = useState({
     show: false,
     text: 'Empty',
@@ -44,32 +46,37 @@ export default function List(props: { id: number }): React.ReactElement {
       firstShow: false,
     });
   }
+  useEffect(() => setCards(cards), [cards]);
+  if (listCards.filter((card) => card.id === -1).length === 0) {
+    listCards.push({ id: -1, position: slotPosition, listId: id, title: '' });
+  }
+
+  // adding slot to list if it hasn't
+  const slot = listCards.filter((card) => card.id === -1)[0];
+
+  if (slot.position !== slotPosition) {
+    setCards(listCards.filter((card) => card.id !== -1));
+  }
   return (
     <div
       className="list"
       id={`list_${id}`}
-      onDrop={(): void => {
-        setCards(dropHandler(dragCard, id, boardId, lists, dispatch).cards);
-      }}
-      onDragEnter={(e): void => {
-        if (e.relatedTarget) {
-          if (e.currentTarget.contains(e.relatedTarget as Node)) {
-            return;
-          }
-        }
-        const result = addEmptySlot(listCards, id);
-        setCards(result);
-        // eslint-disable-next-line no-console
-        console.log('dich');
-      }}
       onDragLeave={(e): void => {
         if (e.relatedTarget) {
           if (e.currentTarget.contains(e.relatedTarget as Node)) {
             return;
           }
         }
-        const result = removeDraggedSlot(listCards, dragCard.id);
+        const result = removeDraggedCard(listCards, dragCard.id);
+        if (slotVisible) setSlotVisibility(false);
         setCards(result);
+      }}
+      onDragEnter={(): void => {
+        if (!slotVisible) setSlotVisibility(true);
+      }}
+      onDrop={(e): void => {
+        dropHandler(e, dragCard, id, boardId, lists, slotPosition, dispatch, setCards);
+        setSlotVisibility(false);
       }}
     >
       <div
@@ -103,10 +110,12 @@ export default function List(props: { id: number }): React.ReactElement {
         {title}
       </h2>
       <Mistake text={mistake.text} show={mistake.show} />
-      {listCards.sort(comparePositionCard).map((key) => (
-        <CardSlot key={key.id} id={key.id} card={key} />
-      ))}
-      <CardCreator listId={id.toString()} lastCardPos={cards.length} />
+      {listCards
+        .sort(comparePositionCard)
+        .map((key) =>
+          key.id !== -1 ? <Card key={key.id} card={key} listId={id} /> : <CardSlot key={key.id} visible={slotVisible} />
+        )}
+      <CardCreator listId={id.toString()} lastCardPos={cards.length} cards={listCards} changeList={setCards} />
     </div>
   );
 }
