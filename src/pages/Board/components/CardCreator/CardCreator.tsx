@@ -16,7 +16,7 @@ async function createCard(
   changeList: React.Dispatch<React.SetStateAction<ICard[]>>,
   cards: ICard[],
   dispatch: Dispatch
-): Promise<void> {
+): Promise<boolean> {
   if (text.search(/^[A-zА-я\d\s\n\t,._-]+$/gu) !== -1) {
     cards.push({ title: text, id: -20, position, listId: +listId });
     changeList(cards);
@@ -28,10 +28,9 @@ async function createCard(
       custom: '',
     });
     await getBoard(dispatch, boardId);
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('Wrong Text!');
+    return true;
   }
+  return false;
 }
 
 export default function CardCreator(props: {
@@ -46,6 +45,19 @@ export default function CardCreator(props: {
   const [showCreator, changeCreatorVisibility] = useState(false);
   const [cardText, saveCardText] = useState('');
   const [buttonDisabled, disableButton] = useState(false);
+
+  async function handleClick(): Promise<void> {
+    disableButton(true);
+    const creationOk = await createCard(cardText, listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
+    if (!creationOk) {
+      const input = document.getElementsByClassName('create_card_textarea')[0] as HTMLInputElement;
+      input.value = 'Wrong card title. Use only letters, numbers, _, -';
+    } else {
+      changeCreatorVisibility(false);
+    }
+    disableButton(false);
+  }
+
   if (!showCreator) {
     return (
       <button className="add_card" onClick={(): void => changeCreatorVisibility(true)}>
@@ -57,21 +69,12 @@ export default function CardCreator(props: {
     <div className="card_creator">
       <textarea
         className="create_card_textarea"
-        onBlur={(e): void => saveCardText(e.currentTarget.value || '')}
-        contentEditable="true"
-        suppressContentEditableWarning
+        onChange={(e): void => {
+          saveCardText(e.currentTarget.value || '');
+        }}
       />
       <div className="button_panel">
-        <button
-          className="create_card_button"
-          disabled={buttonDisabled}
-          onClick={(): void => {
-            disableButton(true);
-            createCard(cardText, listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
-            changeCreatorVisibility(false);
-            disableButton(false);
-          }}
-        >
+        <button className="create_card_button" disabled={buttonDisabled} onClick={handleClick}>
           Create
         </button>
         <div className="delete_button" onClick={(): void => changeCreatorVisibility(false)} />

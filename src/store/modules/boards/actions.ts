@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import api from '../../../api/request';
 import { IBoard } from '../../../common/interfaces/IBoard';
+import { BoardActions, HomeActions } from '../../../common/constants/actionEnums';
 
 interface ApiResponse {
   boards: IBoard[];
@@ -8,26 +9,24 @@ interface ApiResponse {
 export async function getBoards(dispatch: Dispatch): Promise<void> {
   try {
     const { boards }: ApiResponse = await api.get('/board');
-    await dispatch({ type: 'UPDATE_BOARDS', payload: boards });
-    dispatch({ type: 'CLEAR_BOARD' });
+    dispatch({ type: HomeActions.updateBoards, payload: boards });
+    dispatch({ type: BoardActions.clearBoard });
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
-    dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
 export async function delBoard(dispatch: Dispatch, board_id: number, boards: IBoard[]): Promise<void> {
   try {
     const newBoards = boards.filter((el) => el.id !== board_id);
-    dispatch({ type: 'DELETE_BOARD', payload: newBoards });
+    dispatch({ type: HomeActions.updateBoards, payload: newBoards });
     await api.delete(`/board/${board_id}`);
     await getBoards(dispatch);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);
-    dispatch({ type: 'ERROR_ACTION_TYPE' });
   }
 }
 export function addBoard(dispatch: Dispatch, boards: IBoard[]): void {
-  dispatch({ type: 'ADD_BOARD', payload: boards });
+  dispatch({ type: HomeActions.updateBoards, payload: boards });
 }

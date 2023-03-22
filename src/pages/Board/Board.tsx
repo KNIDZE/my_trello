@@ -70,6 +70,8 @@ export default function Board(): JSX.Element {
         e.preventDefault();
         e.stopPropagation();
       }}
+      // if card drops not in list
+      onDrop={(): Promise<void> => getBoard(dispatch, boardId || '')}
     >
       <div className="table_title_div">
         <Link className="link_home" onClick={(): void => clearBoardState(dispatch)} to="/">

@@ -18,3 +18,7 @@ export interface BoardProps {
   draggedCard: ICard;
   slotPosition: number;
 }
+export interface NewBoardState {
+  boardCreatorVisible: boolean;
+  newBoardTitle: string;
+}

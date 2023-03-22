@@ -1,21 +1,11 @@
 /* eslint-disable */
-import { IBoard } from '../../../common/interfaces/IBoard';
+import { HomeActions } from '../../../common/constants/actionEnums';
 
 const initialState = {
 };
 export default function reducer(state = initialState, action: {type: string, payload?: any}) {
   switch (action.type) {
-    case 'UPDATE_BOARDS':
-      return {
-        ...state,
-        boards: action.payload
-      }
-    case 'ADD_BOARD':
-      return {
-        ...state,
-        boards: action.payload
-      }
-    case "DELETE_BOARD":
+    case HomeActions.updateBoards:
       return {
         ...state,
         boards: action.payload

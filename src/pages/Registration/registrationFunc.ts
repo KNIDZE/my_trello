@@ -1,5 +1,7 @@
 import { NavigateFunction } from 'react-router-dom';
 import { Dispatch } from 'redux';
+import { AxiosError } from 'axios';
+import React from 'react';
 import api from '../../api/request';
 import { logIn } from '../Login/loginfunc';
 
@@ -30,6 +32,7 @@ export function isPasswordCorrect(): boolean {
   const passwordScore = document.getElementsByClassName('password_score')[0].innerHTML;
   return passwordScore !== 'too short' && passwordScore !== 'weak';
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function hasAccount(): void {
   const formEmail = document.getElementById('email')?.parentElement;
   const emailWarning = document.createElement('p');
@@ -40,22 +43,29 @@ function hasAccount(): void {
     formEmail?.append(emailWarning);
   }
 }
-function registration(email: string, password: string, navigate: NavigateFunction, dispatch: Dispatch): void {
-  api
-    .post('/user', {
+async function registration(
+  email: string,
+  password: string,
+  navigate: NavigateFunction,
+  dispatch: Dispatch,
+  checkUser: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<void> {
+  try {
+    await api.post('/user', {
       email,
       password,
-    })
-    .then((e) => {
-      if (e.data?.error === 'User already exists') {
-        hasAccount();
-      } else {
-        logIn(email, password, dispatch);
-        setTimeout(() => {
-          navigate('/');
-        }, 1000);
-      }
     });
+    logIn(email, password, dispatch);
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
+  } catch (e) {
+    const error = e as AxiosError;
+    const messageError = error.response?.data as { error: string };
+    if (messageError.error === 'User already exists') {
+      checkUser(true);
+    }
+  }
 }
 
 export async function signUp(
@@ -63,13 +73,12 @@ export async function signUp(
   email: string,
   password: string,
   navigate: NavigateFunction,
-  dispatch: Dispatch
+  dispatch: Dispatch,
+  checkUser: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<void> {
   const allowReg = allowed.confirm && allowed.email && allowed.password;
   await localStorage.removeItem('user_token');
-  // eslint-disable-next-line no-alert,@typescript-eslint/no-unused-expressions
   if (allowReg) {
-    // hasAccount();
-    await registration(email, password, navigate, dispatch);
+    await registration(email, password, navigate, dispatch, checkUser);
   }
 }

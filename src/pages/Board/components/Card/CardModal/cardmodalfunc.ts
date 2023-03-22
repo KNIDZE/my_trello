@@ -41,11 +41,7 @@ export async function saveDescription(
   }
 }
 function findList(lists: IList[], listId: number): IList | undefined {
-  // eslint-disable-next-line no-restricted-syntax
-  for (const list of lists) {
-    if (list.id === listId) return list;
-  }
-  return undefined;
+  return lists.find((list) => list.id === listId);
 }
 export async function transferCard(
   boardId: string,

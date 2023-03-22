@@ -9,10 +9,11 @@ const instance = axios.create({
   },
 });
 instance.interceptors.request.use((config) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line no-param-reassign
-  config.headers.Authorization = `Bearer ${localStorage.getItem('user_token')}`;
+  const conf = config;
+  if (conf.headers) {
+    conf.headers.Authorization = `Bearer ${localStorage.getItem('user_token')}`;
+    return conf;
+  }
   return config;
 });
 

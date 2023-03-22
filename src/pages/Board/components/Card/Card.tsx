@@ -6,16 +6,14 @@ import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
 import { setSlotPosition } from '../../../../store/modules/board/actions';
 
-type Visible = 'visible' | 'hidden';
 export default function Card(props: { card: ICard; listId: number }): React.ReactElement {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { card, listId } = props;
   const navigate = useNavigate();
   const path = useLocation();
   const dispatch = useDispatch();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [visibility, setVisibility] = useState<Visible>();
-
+  const [dragging, setDragging] = useState(false);
+  const visibility = dragging ? 'hidden' : 'visible';
+  const position = dragging ? 'absolute' : 'initial';
   // cut long sentence
   if (card.title.length > 30) {
     card.title = `${card.title.slice(0, 25)}...`;
@@ -25,13 +23,13 @@ export default function Card(props: { card: ICard; listId: number }): React.Reac
       id={card.id.toString()}
       className="card"
       draggable="true"
-      style={{ visibility }}
+      style={{ visibility, position }}
       onDragStart={(e): void => {
         dragStartHandler(e, card, listId, dispatch);
         // Card not disappears from initial list if there isn't Timeout
-        setTimeout(() => setVisibility('hidden'), 1);
+        setTimeout(() => setDragging(true), 1);
       }}
-      onDragEnd={(): void => setVisibility('visible')}
+      onDragEnd={(): void => setDragging(false)}
       onClick={(): void => {
         navigate(`${path.pathname}/card/${card.id}`);
       }}

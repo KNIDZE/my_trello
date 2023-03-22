@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useEffect, useState } from 'react';
 import './list.scss';
 import { useParams } from 'react-router-dom';
@@ -48,12 +47,11 @@ export default function List(props: ListProps): React.ReactElement {
   }
   useEffect(() => setCards(cards), [cards]);
   if (listCards.filter((card) => card.id === -1).length === 0) {
-    listCards.push({ id: -1, position: slotPosition, listId: id, title: '' });
+    listCards.push({ id: -1, position: slotPosition === -1 ? listCards.length : slotPosition, listId: id, title: '' });
   }
 
   // adding slot to list if it hasn't
   const slot = listCards.filter((card) => card.id === -1)[0];
-
   if (slot.position !== slotPosition) {
     setCards(listCards.filter((card) => card.id !== -1));
   }
@@ -75,6 +73,7 @@ export default function List(props: ListProps): React.ReactElement {
         if (!slotVisible) setSlotVisibility(true);
       }}
       onDrop={(e): void => {
+        e.stopPropagation();
         dropHandler(e, dragCard, id, boardId, lists, slotPosition, dispatch, setCards);
         setSlotVisibility(false);
       }}
@@ -115,7 +114,7 @@ export default function List(props: ListProps): React.ReactElement {
         .map((key) =>
           key.id !== -1 ? <Card key={key.id} card={key} listId={id} /> : <CardSlot key={key.id} visible={slotVisible} />
         )}
-      <CardCreator listId={id.toString()} lastCardPos={cards.length} cards={listCards} changeList={setCards} />
+      <CardCreator listId={id.toString()} lastCardPos={cards.length - 1} cards={listCards} changeList={setCards} />
     </div>
   );
 }

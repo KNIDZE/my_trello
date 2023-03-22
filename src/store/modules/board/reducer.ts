@@ -1,15 +1,17 @@
 /* eslint-disable */
 
 
+import { BoardActions } from '../../../common/constants/actionEnums';
+
 const initialState = {
   board: {title: '', lists: [], id: undefined},
-  slotPosition: -1,
+  slotPosition: 0.5,
   draggedCard: {id: 0, listId: 0, title: '', description: '', position: 0}
 };
 
 export default function reducer(state = initialState, action: { type: string, payload?: any }) {
   switch (action.type) {
-    case 'LOAD_BOARD':
+    case BoardActions.loadBoard:
       if (action.payload){
         return {
           ...state,
@@ -19,36 +21,31 @@ export default function reducer(state = initialState, action: { type: string, pa
       return {
         ...state,
       };
-    case 'SET_CURRENT_CARD':
+    case BoardActions.setCard:
       return {
         ...state, currentBoardId: action.payload
       }
-    case 'CLEAR_BOARD':
+    case BoardActions.clearBoard:
       return {
         ...state,
         board : {id: undefined, title: '', lists: []} ,
       };
-    case 'ADD_LIST':
+    case BoardActions.addList:
       return {
         ...state,
         board: {title: state.board.title, id: state.board.id, lists: action.payload}
       };
-    case 'CHANGE_LISTS':
-      return {
-        ...state,
-        board: {title: state.board.title, id: state.board.id, lists: action.payload}
-      }
-    case 'SET_DRAG_CARD':
+    case BoardActions.setDragCard:
       return {
         ...state,
         draggedCard: action.payload
       }
-    case 'SET_SLOT_POSITION':
+    case BoardActions.setSlotPosition:
       return {
         ...state,
         slotPosition: action.payload
       }
-    case 'UPDATE_LISTS':
+    case BoardActions.changeLists:
       return {
         ...state,
         board: {
