@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
-import { setSlotPosition } from '../../../../store/modules/board/actions';
+import { setDraggingState, setSlotPosition } from '../../../../store/modules/board/actions';
 
-export default function Card(props: { card: ICard; listId: number }): React.ReactElement {
-  const { card, listId } = props;
+export default function Card(props: { card: ICard; listId: number; isDragging: boolean }): React.ReactElement {
+  const { card, listId, isDragging } = props;
   const navigate = useNavigate();
   const path = useLocation();
   const dispatch = useDispatch();
@@ -26,17 +26,22 @@ export default function Card(props: { card: ICard; listId: number }): React.Reac
       style={{ visibility, position }}
       onDragStart={(e): void => {
         dragStartHandler(e, card, listId, dispatch);
+        setDraggingState(true, dispatch);
         // Card not disappears from initial list if there isn't Timeout
         setTimeout(() => setDragging(true), 1);
       }}
-      onDragEnd={(): void => setDragging(false)}
+      onDragEnd={(): void => {
+        setDragging(false);
+      }}
       onClick={(): void => {
         navigate(`${path.pathname}/card/${card.id}`);
       }}
       onDragOver={(e): void => {
-        const elementRect = e.currentTarget.getBoundingClientRect();
-        if (e.clientY > elementRect.y + elementRect.height / 2) setSlotPosition(card.position + 0.5, dispatch);
-        if (e.clientY <= elementRect.y + elementRect.height / 2) setSlotPosition(card.position - 0.5, dispatch);
+        if (isDragging) {
+          const elementRect = e.currentTarget.getBoundingClientRect();
+          if (e.clientY > elementRect.y + elementRect.height / 2) setSlotPosition(card.position + 0.5, dispatch);
+          if (e.clientY <= elementRect.y + elementRect.height / 2) setSlotPosition(card.position - 0.5, dispatch);
+        }
       }}
     >
       <p className="inner_text">{card.title}</p>

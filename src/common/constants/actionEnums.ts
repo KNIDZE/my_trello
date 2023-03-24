@@ -6,6 +6,7 @@ export enum BoardActions {
   setDragCard = 'SET_DRAG_CARD',
   setSlotPosition = 'SET_SLOT_POSITION',
   clearBoard = 'CLEAR_BOARD',
+  setDragging = 'SET_DRAGGING',
 }
 
 export enum HomeActions {

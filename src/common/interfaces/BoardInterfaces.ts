@@ -7,7 +7,7 @@ export interface BoardInterface {
 }
 
 export interface BoardState {
-  board: { board: BoardInterface; draggedCard: ICard; slotPosition: number };
+  board: { board: BoardInterface; draggedCard: ICard; slotPosition: number, isDragging: boolean };
 }
 
 export interface BoardProps {
@@ -17,6 +17,7 @@ export interface BoardProps {
   };
   draggedCard: ICard;
   slotPosition: number;
+  isDragging: boolean;
 }
 export interface NewBoardState {
   boardCreatorVisible: boolean;

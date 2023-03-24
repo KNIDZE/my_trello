@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
 import { Dispatch } from 'redux';
-import { delList, renameList } from '../../../../store/modules/board/actions';
+import { delList, renameList, setDraggingState } from '../../../../store/modules/board/actions';
 import CardCreator from '../CardCreator/CardCreator';
 import { comparePositionCard, isStringValid, notValidString } from '../../../../common/commonFunctions';
 import IList from '../../../../common/interfaces/IList';
@@ -19,13 +19,14 @@ interface ListProps {
   dragCard: ICard;
   slotPosition: number;
   id: number;
+  isDragging: boolean;
 }
 export function renameListOrError(dispatch: Dispatch, title: string, listId: string, boardId: string): void {
   if (isStringValid(title)) renameList(dispatch, title, listId, boardId);
 }
 
 export default function List(props: ListProps): React.ReactElement {
-  const { lists, dragCard, slotPosition, id } = props;
+  const { lists, dragCard, slotPosition, id, isDragging } = props;
   const { title, cards } = lists.filter((list) => list.id === id)[0];
   const dispatch = useDispatch();
   const { boardId } = useParams();
@@ -65,17 +66,24 @@ export default function List(props: ListProps): React.ReactElement {
             return;
           }
         }
-        const result = removeDraggedCard(listCards, dragCard.id);
-        if (slotVisible) setSlotVisibility(false);
-        setCards(result);
+        if (isDragging) {
+          const result = removeDraggedCard(listCards, dragCard.id);
+          if (slotVisible) setSlotVisibility(false);
+          setCards(result);
+        }
       }}
       onDragEnter={(): void => {
-        if (!slotVisible) setSlotVisibility(true);
+        if (isDragging) {
+          if (!slotVisible) setSlotVisibility(true);
+        }
       }}
       onDrop={(e): void => {
-        e.stopPropagation();
-        dropHandler(e, dragCard, id, boardId, lists, slotPosition, dispatch, setCards);
-        setSlotVisibility(false);
+        if (isDragging) {
+          e.stopPropagation();
+          dropHandler(e, dragCard, id, boardId, lists, slotPosition, dispatch, setCards);
+          setSlotVisibility(false);
+          setDraggingState(false, dispatch)
+        }
       }}
     >
       <div
@@ -112,7 +120,11 @@ export default function List(props: ListProps): React.ReactElement {
       {listCards
         .sort(comparePositionCard)
         .map((key) =>
-          key.id !== -1 ? <Card key={key.id} card={key} listId={id} /> : <CardSlot key={key.id} visible={slotVisible} />
+          key.id !== -1 ? (
+            <Card key={key.id} card={key} listId={id} isDragging={isDragging} />
+          ) : (
+            <CardSlot key={key.id} visible={slotVisible} />
+          )
         )}
       <CardCreator listId={id.toString()} lastCardPos={cards.length - 1} cards={listCards} changeList={setCards} />
     </div>

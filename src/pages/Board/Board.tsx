@@ -19,6 +19,7 @@ const mapStateToProps = (state: BoardState): BoardProps => ({
   board: state.board.board,
   draggedCard: state.board.draggedCard,
   slotPosition: state.board.slotPosition,
+  isDragging: state.board.isDragging,
 });
 
 async function renameRequest(title: string, boardId: string, dispatch: Dispatch): Promise<void> {
@@ -40,7 +41,7 @@ function renameBoard(dispatch: Dispatch, title: string, boardId: string): void {
 }
 
 export default function Board(): JSX.Element {
-  const { board, draggedCard, slotPosition } = useSelector(mapStateToProps);
+  const { board, draggedCard, slotPosition, isDragging } = useSelector(mapStateToProps);
   const { boardId, cardId } = useParams();
   const dispatch = useDispatch();
   const [mistake, setMistake] = useState({
@@ -104,7 +105,14 @@ export default function Board(): JSX.Element {
       </div>
       <div className="container" id="board_container">
         {board.lists.map((key) => (
-          <List key={key.id} id={key.id} lists={board.lists} dragCard={draggedCard} slotPosition={slotPosition} />
+          <List
+            key={key.id}
+            id={key.id}
+            lists={board.lists}
+            dragCard={draggedCard}
+            slotPosition={slotPosition}
+            isDragging={isDragging}
+          />
         ))}
         <div className="button_column">
           <AddListButton lists={board.lists} position={board.lists.length + 1} />

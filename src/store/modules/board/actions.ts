@@ -123,3 +123,6 @@ export function setDragCard(card: ICard, dispatch: Dispatch): void {
 export function setSlotPosition(position: number, dispatch: Dispatch): void {
   dispatch({ type: BoardActions.setSlotPosition, payload: position });
 }
+export function setDraggingState(dragging: boolean, dispatch: Dispatch): void {
+  dispatch({ type: BoardActions.setDragging, payload: dragging });
+}
