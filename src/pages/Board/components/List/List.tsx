@@ -50,7 +50,7 @@ export default function List(props: ListProps): React.ReactElement {
   if (listCards.filter((card) => card.id === -1).length === 0) {
     listCards.push({ id: -1, position: slotPosition === -1 ? listCards.length : slotPosition, listId: id, title: '' });
   }
-
+  // it's worse comment ever !!!!!!!!!!!!
   // adding slot to list if it hasn't
   const slot = listCards.filter((card) => card.id === -1)[0];
   if (slot.position !== slotPosition) {
