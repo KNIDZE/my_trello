@@ -82,7 +82,7 @@ export default function List(props: ListProps): React.ReactElement {
           e.stopPropagation();
           dropHandler(e, dragCard, id, boardId, lists, slotPosition, dispatch, setCards);
           setSlotVisibility(false);
-          setDraggingState(false, dispatch)
+          setDraggingState(false, dispatch);
         }
       }}
     >
