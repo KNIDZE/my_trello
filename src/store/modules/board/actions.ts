@@ -46,9 +46,10 @@ export async function addNewList(
 
 export async function delList(dispatch: Dispatch, boardId: string, listId: string, lists: IList[]): Promise<void> {
   try {
-    const newLists = lists.filter((list) => list.id === +listId);
+    const newLists = lists.filter((list) => list.id !== +listId);
     dispatch({ type: BoardActions.changeLists, payload: newLists });
-    await api.delete(`/board/${boardId}/list/${listId}`).then(() => getBoard(dispatch, boardId));
+    await api.delete(`/board/${boardId}/list/${listId}`);
+    getBoard(dispatch, boardId);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e);

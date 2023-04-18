@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './cardCreator.scss';
 import { useParams } from 'react-router-dom';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { getBoard } from '../../../../store/modules/board/actions';
 import api from '../../../../api/request';
 import { ICard } from '../../../../common/interfaces/ICard.t';
+import { useVisibility } from '../../../../common/commonFunctions';
 
 async function createCard(
   text: string,
@@ -32,35 +33,36 @@ async function createCard(
   }
   return false;
 }
-
-export default function CardCreator(props: {
+interface CardCreatorProps {
   listId: string;
   lastCardPos: number;
   cards: ICard[];
   changeList: React.Dispatch<React.SetStateAction<ICard[]>>;
-}): React.ReactElement {
-  const { listId, lastCardPos, cards, changeList } = props;
+}
+export default function CardCreator({ listId, lastCardPos, cards, changeList }: CardCreatorProps): React.ReactElement {
   const { boardId } = useParams();
   const dispatch = useDispatch();
-  const [showCreator, changeCreatorVisibility] = useState(false);
-  const [cardText, saveCardText] = useState('');
-  const [buttonDisabled, disableButton] = useState(false);
-
-  async function handleClick(): Promise<void> {
-    disableButton(true);
-    const creationOk = await createCard(cardText, listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
+  const [isModalVisible, reverseVisibility] = useVisibility();
+  const [cardText, setCardText] = useState('');
+  const [buttonDisabled, setButtonDisabling] = useState(false);
+  useEffect(() => {
+    setCardText('');
+  }, [isModalVisible]);
+  const handleClick = useCallback(async (): Promise<void> => {
+    if (!boardId) return;
+    setButtonDisabling(true);
+    const creationOk = await createCard(cardText, listId, boardId, lastCardPos + 1, changeList, cards, dispatch);
     if (!creationOk) {
-      const input = document.getElementsByClassName('create_card_textarea')[0] as HTMLInputElement;
-      input.value = 'Wrong card title. Use only letters, numbers, _, -';
+      setCardText('Wrong card title. Use only letters, numbers, _, -');
     } else {
-      changeCreatorVisibility(false);
+      reverseVisibility();
     }
-    disableButton(false);
-  }
+    setButtonDisabling(false);
+  }, [cardText]);
 
-  if (!showCreator) {
+  if (!isModalVisible) {
     return (
-      <button className="add_card" onClick={(): void => changeCreatorVisibility(true)}>
+      <button className="add_card" onClick={(): void => reverseVisibility()}>
         <AiOutlinePlus />
       </button>
     );
@@ -70,14 +72,15 @@ export default function CardCreator(props: {
       <textarea
         className="create_card_textarea"
         onChange={(e): void => {
-          saveCardText(e.currentTarget.value || '');
+          if (e.currentTarget.value) setCardText(e.currentTarget.value);
         }}
+        value={cardText}
       />
       <div className="button_panel">
         <button className="create_card_button" disabled={buttonDisabled} onClick={handleClick}>
           Create
         </button>
-        <div className="delete_button" onClick={(): void => changeCreatorVisibility(false)} />
+        <div className="delete_button" onClick={(): void => reverseVisibility()} />
       </div>
     </div>
   );

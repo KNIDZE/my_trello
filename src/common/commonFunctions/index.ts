@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ICard } from '../interfaces/ICard.t';
 import IList from '../interfaces/IList';
 
@@ -34,4 +35,12 @@ export function notValidString(title: string, titleDuplication = false): string 
     return 'Empty title';
   }
   return 'Only letters, numbers, _, -';
+}
+
+export function useVisibility(visible = false): [boolean, () => void] {
+  const [isVisible, setVisible] = useState(visible);
+  function changeVisibility(): void {
+    setVisible(!isVisible);
+  }
+  return [isVisible, changeVisibility];
 }

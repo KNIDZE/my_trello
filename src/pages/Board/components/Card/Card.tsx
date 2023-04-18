@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './card.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -6,18 +6,32 @@ import { ICard } from '../../../../common/interfaces/ICard.t';
 import { dragStartHandler } from './dragNdrop';
 import { setDraggingState, setSlotPosition } from '../../../../store/modules/board/actions';
 
-export default function Card(props: { card: ICard; listId: number; isDragging: boolean }): React.ReactElement {
-  const { card, listId, isDragging } = props;
+export default function Card({
+  card,
+  listId,
+  isDragging,
+}: {
+  card: ICard;
+  listId: number;
+  isDragging: boolean;
+}): React.ReactElement {
   const navigate = useNavigate();
   const path = useLocation();
   const dispatch = useDispatch();
   const [dragging, setDragging] = useState(false);
   const visibility = dragging ? 'hidden' : 'visible';
   const position = dragging ? 'absolute' : 'initial';
-  // cut long sentence
-  if (card.title.length > 30) {
-    card.title = `${card.title.slice(0, 25)}...`;
-  }
+
+  const processCardTitle = useCallback((title: string): string => {
+    if (card.title.length > 30) {
+      return `${title.slice(0, 25)}...`;
+    }
+    return title;
+  }, []);
+  useEffect(() => {
+    // cut long sentence
+  }, [card.title]);
+
   return (
     <div
       id={card.id.toString()}
@@ -44,7 +58,7 @@ export default function Card(props: { card: ICard; listId: number; isDragging: b
         }
       }}
     >
-      <p className="inner_text">{card.title}</p>
+      <p className="inner_text">{processCardTitle(card.title)}</p>
     </div>
   );
 }

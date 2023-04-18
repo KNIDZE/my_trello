@@ -1,42 +1,40 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import './registration.scss';
-import PasswordStrengthBar from 'react-password-strength-bar';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { emailValidation, isPasswordCorrect, isPasswordEqual, objectsEqual, signUp } from './registrationFunc';
-import Loading from '../Home/components/Loading/Loading';
+import { emailValidation, isPasswordEqual, signUp } from './registrationFunc';
 import { Mistake } from '../../common/Mistake/Mistake';
+import PasswordCheckBar from './PasswordCheckBar/PasswordCheckBar';
 
 export function Registration(): ReactElement {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [password, changePassword] = useState('');
-  const [email, changeEmail] = useState('');
-  const [secondPassword, changeSecondPassword] = useState('');
-  const [isUserExists, checkUser] = useState(false);
-  const [registration, allowRegistration] = useState({
-    email: false,
-    password: false,
-    confirm: false,
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [amountPasswordProblems, setPasswordProblems] = useState(1);
+  const [secondPassword, setSecondPassword] = useState('');
+  const [isUserExists, setUserCheck] = useState(false);
+  const [canRegister, setRegistrationPermission] = useState({
+    emailValid: false,
+    passwordValid: false,
+    secondPasswordValid: false,
   });
-  const isAuthorised = localStorage.getItem('is_auth');
+
+  const [buttonDisabled, disableButton] = useState(false);
   useEffect(() => {
+    const isAuthorised = localStorage.getItem('is_auth');
     if (isAuthorised === 'true') {
       navigate('/');
     }
-  });
-  const [buttonDisabled, disableButton] = useState(false);
-  const newValidationState = {
-    email: emailValidation(email),
-    password: isPasswordCorrect(),
-    confirm: isPasswordEqual(password, secondPassword),
-  };
-  if (!objectsEqual(registration, newValidationState)) {
-    allowRegistration(newValidationState);
-  }
-  if (isAuthorised === 'true') {
-    return <Loading />;
-  }
+  }, []);
+  useEffect(() => {
+    const newValidationState = {
+      emailValid: emailValidation(email),
+      passwordValid: amountPasswordProblems === 0,
+      secondPasswordValid: isPasswordEqual(password, secondPassword),
+    };
+    setRegistrationPermission(newValidationState);
+  }, [email, password, secondPassword]);
   return (
     <section className="registration_section center_column">
       <div className="registration_area center_column">
@@ -47,13 +45,13 @@ export function Registration(): ReactElement {
             className="login_input"
             id="email"
             onInput={(e): void => {
-              changeEmail(e.currentTarget.value);
-              checkUser(false);
+              setEmail(e.currentTarget.value);
+              setUserCheck(false);
             }}
           />
           <Mistake
             text={isUserExists ? 'This user exists' : 'Please, enter the existing email'}
-            show={(!registration.email && email.length !== 0) || isUserExists}
+            show={(!canRegister.emailValid && email.length !== 0) || isUserExists}
           />
           <p>password</p>
           <input
@@ -61,31 +59,27 @@ export function Registration(): ReactElement {
             id="password"
             className="login_input"
             onInput={(e): void => {
-              changePassword(e.currentTarget.value);
+              setPassword(e.currentTarget.value);
             }}
-            onFocus={(e): void => {
-              changePassword(e.currentTarget.value);
+            onChange={(e): void => {
+              setPassword(e.currentTarget.value);
             }}
           />
-          <PasswordStrengthBar scoreWordClassName="password_score" minLength={8} password={password} />
-          <Mistake
-            text="Password must contain uppercase, lowercase, numbers"
-            show={!registration.password && password.length !== 0}
-          />
+          <PasswordCheckBar password={password} minLength={8} onPasswordChange={setPasswordProblems} />
           <p>confirm password</p>
           <input
             type="password"
             className="login_input"
-            onChange={(e): void => changeSecondPassword(e.currentTarget.value)}
+            onChange={(e): void => setSecondPassword(e.currentTarget.value)}
           />
-          <Mistake text="Passwords not equal" show={!registration.confirm && secondPassword.length !== 0} />
+          <Mistake text="Passwords not equal" show={!canRegister.secondPasswordValid && secondPassword.length !== 0} />
         </form>
         <button
           className="login_button"
           disabled={buttonDisabled}
           onClick={(): void => {
             disableButton(true);
-            signUp(registration, email, password, navigate, dispatch, checkUser).then(() => disableButton(false));
+            signUp(canRegister, email, password, navigate, dispatch, setUserCheck).then(() => disableButton(false));
           }}
         >
           Sign up

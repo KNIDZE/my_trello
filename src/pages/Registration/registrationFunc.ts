@@ -6,16 +6,9 @@ import api from '../../api/request';
 import { logIn } from '../Login/loginfunc';
 
 interface ValidationProps {
-  email: boolean;
-  password: boolean;
-  confirm: boolean;
-}
-export function objectsEqual(firstObg: ValidationProps, secondObg: ValidationProps): boolean {
-  return (
-    firstObg.password === secondObg.password &&
-    firstObg.email === secondObg.email &&
-    firstObg.confirm === secondObg.confirm
-  );
+  emailValid: boolean;
+  passwordValid: boolean;
+  secondPasswordValid: boolean;
 }
 export function emailValidation(email: string): boolean {
   if (!email.match(/^[a-zA-Z\d_.+-]+@[a-zA-Z\d-]+\.[a-zA-Z\d-.]+$/)) {
@@ -26,12 +19,7 @@ export function emailValidation(email: string): boolean {
 export function isPasswordEqual(password1: string, password2: string): boolean {
   return password1 === password2;
 }
-export function isPasswordCorrect(): boolean {
-  const password = document.getElementsByClassName('password_score')[0];
-  if (!password) return false;
-  const passwordScore = document.getElementsByClassName('password_score')[0].innerHTML;
-  return passwordScore !== 'too short' && passwordScore !== 'weak';
-}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function hasAccount(): void {
   const formEmail = document.getElementById('email')?.parentElement;
@@ -76,7 +64,7 @@ export async function signUp(
   dispatch: Dispatch,
   checkUser: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<void> {
-  const allowReg = allowed.confirm && allowed.email && allowed.password;
+  const allowReg = allowed.secondPasswordValid && allowed.emailValid && allowed.passwordValid;
   await localStorage.removeItem('user_token');
   if (allowReg) {
     await registration(email, password, navigate, dispatch, checkUser);

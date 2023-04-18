@@ -1,13 +1,17 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import './cardmodal.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgCloseO } from 'react-icons/cg';
-import { changeDescription, copyText, deleteCard, returnOnBoard, saveDescription, transferCard } from './cardmodalfunc';
+import { copyText, deleteCard, returnOnBoard, saveDescription } from './cardmodalfunc';
 import { findListCard, isStringValid, notValidString } from '../../../../../common/commonFunctions';
-import { renameCard } from '../../../../../store/modules/board/actions';
+import { getBoard, renameCard, updateLists } from '../../../../../store/modules/board/actions';
 import { Mistake } from '../../../../../common/Mistake/Mistake';
 import IList from '../../../../../common/interfaces/IList';
+import Loading from '../../../../Home/components/Loading/Loading';
+import ListSelector from './ListSelector/ListSelector';
+import { transferCard } from '../dragNdrop';
+import api from '../../../../../api/request';
 
 interface CardModalState {
   board: {
@@ -29,54 +33,70 @@ export function CardModal(): ReactElement | null {
   const { lists } = useSelector(mapStateToProps);
   const navigate = useNavigate();
   const { boardId, cardId } = useParams();
-  if (!cardId) return null;
-  const cardModal = findListCard(lists, cardId);
-  const { card, list } = cardModal;
+  if (!cardId || !boardId) return null;
+  const { card, list } = findListCard(lists, cardId);
   const dispatch = useDispatch();
-  const [listToMove, transferList] = useState(list.id);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cardTitle, setTitle] = useState(card?.title);
+  const [cardTitle, setTitle] = useState(card.title);
   const [mistake, setMistake] = useState({
     show: false,
     text: 'Empty',
     firstShow: true,
   });
-  const listsToMove = lists.map((curList) => (
-    <option key={curList.id} value={curList.id} className="option">
-      {curList.title}
-    </option>
-  ));
-  if (!isStringValid(cardTitle) && !mistake.show && !mistake.firstShow) {
-    const mistakeText = notValidString(cardTitle);
-    setMistake({
-      show: true,
-      text: mistakeText,
-      firstShow: false,
-    });
-  }
-  const participants = [];
-  for (let i = 0; i < 3; i++) {
-    participants.push(<div key={i} className="participant" />);
-  }
-  participants.push(<div key={-1} className="add_participant display_center" />);
-  participants.push(
-    <button key={-2} className="join_button display_center">
-      join
-    </button>
+  const setNewList = useCallback(
+    async (listId: number) => {
+      const amountCards = lists.find((eachList) => eachList.id === listId)?.cards.length;
+      if (amountCards) {
+        const newLists = transferCard(card, lists, listId, amountCards + 1);
+        updateLists(newLists, dispatch);
+        const cardsToUpdate = lists
+          // used filter because object is possibly undefined. Want to do one line code.
+          .filter((eachList) => eachList.id === listId)[0] // getting old list and concat with new one
+          .cards.concat(lists.filter((eachList) => eachList.id === list.id)[0].cards)
+          .map((oneCard) => ({ id: oneCard.id, position: oneCard.position, list_id: oneCard.listId }))
+          .filter((eachCard) => eachCard.id !== -1);
+        await api.put(`/board/${boardId}/card`, cardsToUpdate);
+        await getBoard(dispatch, boardId);
+      }
+    },
+    [boardId, card, lists]
   );
-  const [isChangeable, inverseChangeable] = useState(true);
+  const [participants, setParticipants] = useState<JSX.Element[]>([]);
+  useEffect(() => {
+    if (!isStringValid(cardTitle) && !mistake.show && !mistake.firstShow) {
+      const mistakeText = notValidString(cardTitle);
+      setMistake((prevState) => ({ ...prevState, show: true, text: mistakeText }));
+    }
+  }, [cardTitle, mistake]);
+  // create participants one
+  useEffect(() => {
+    const participantsList = [];
+    for (let i = 0; i < 3; i++) {
+      participantsList.push(<div key={i} className="participant" />);
+    }
+    participantsList.push(<div key={-1} className="add_participant display_center" />);
+    participantsList.push(
+      <button key={-2} className="join_button display_center">
+        join
+      </button>
+    );
+    setParticipants(participantsList);
+  }, []);
+
+  if (!boardId || !card) {
+    return <Loading />;
+  }
   return (
     <div
       className="card_modal_area"
       onClick={(): void => {
-        returnOnBoard(boardId || '', navigate);
+        returnOnBoard(boardId, navigate);
       }}
     >
       <div className="card_modal" onClick={(e): void => e.stopPropagation()}>
         <div
           className="delete_button"
           onClick={(): void => {
-            returnOnBoard(boardId || '', navigate);
+            returnOnBoard(boardId, navigate);
           }}
         >
           <CgCloseO color="white" size={100} />
@@ -88,68 +108,41 @@ export function CardModal(): ReactElement | null {
           data-ph="One more card..."
           onInput={(event): void => {
             if (!isStringValid(event.currentTarget.innerHTML))
-              setMistake({
-                text: mistake.text,
-                show: mistake.show,
-                firstShow: false,
-              });
-            else
-              setMistake({
-                text: mistake.text,
-                show: false,
-                firstShow: false,
-              });
+              setMistake((prevState) => ({ ...prevState, firstShow: false }));
+            else setMistake((prevState) => ({ ...prevState, show: false, firstShow: false }));
             setTitle(event.currentTarget.innerHTML);
           }}
-          onBlur={(event): Promise<void> =>
-            renameCard(event.currentTarget.textContent || '', boardId || '', card?.id || 0, list.id, dispatch)
-          }
+          onBlur={(event): void => {
+            if (event.currentTarget.textContent)
+              renameCard(event.currentTarget.textContent, boardId, card?.id, list.id, dispatch);
+          }}
         >
-          {card?.title}
+          {card.title}
         </h6>
         <Mistake text={mistake.text} show={mistake.show && !mistake.firstShow} />
-        <p>
-          In <span id="in_list">{list.title}</span> list
-        </p>
         <p className="participants_label">Participants:</p>
         <div className="participants">{participants}</div>
         <p className="description_label">Description:</p>
         <textarea
-          defaultValue={card?.description}
-          disabled
+          defaultValue={card.description}
           className="description_input"
+          placeholder="Description will be here..."
           id="description"
           onBlur={(e): Promise<void> =>
             saveDescription(card.id, card.title, e.currentTarget.value, boardId, `${list.id}`, dispatch)
           }
         />
-        <button
-          className="change_description"
-          onClick={(): void => {
-            inverseChangeable(!isChangeable);
-            changeDescription(isChangeable);
-          }}
-        >
-          Change
-        </button>
         <div className="actions">
-          <select defaultValue={list.id} id="lists" onChange={(e): void => transferList(+e.currentTarget.value)}>
-            {listsToMove}
-          </select>
-          <button
-            className="action"
-            onClick={(): Promise<void> => transferCard(boardId || '', listToMove, card, dispatch, lists)}
-          >
-            Move
-          </button>
+          <p>Current list:</p>
+          <ListSelector listTitle={list.title} lists={lists} setNewList={setNewList} />
           <button className="action" onClick={(): void => copyText()}>
             Copy
           </button>
           <button
             className="action delete_action_button"
             onClick={(): void => {
-              deleteCard(dispatch, boardId || '', card.id, lists, list.id);
-              returnOnBoard(boardId || '', navigate);
+              deleteCard(dispatch, boardId, card.id, lists, list.id);
+              returnOnBoard(boardId, navigate);
             }}
           >
             Delete

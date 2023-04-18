@@ -51,7 +51,7 @@ function transferCardInList(draggedCard: ICard, boardLists: IList[], cardPositio
 }
 // Searching a card that we drag. Move card info to drop list.
 
-function transferCard(draggedCard: ICard, boardLists: IList[], listId: number, cardPosition: number): IList[] {
+export function transferCard(draggedCard: ICard, boardLists: IList[], listId: number, cardPosition: number): IList[] {
   const currentCard = draggedCard;
   const oldListId = currentCard.listId;
   return boardLists.map((list) => {

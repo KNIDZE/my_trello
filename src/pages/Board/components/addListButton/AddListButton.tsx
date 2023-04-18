@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './addListButton.scss';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { addNewList, getBoard } from '../../../../store/modules/board/actions';
-import { isStringValid, notValidString } from '../../../../common/commonFunctions';
+import { isStringValid, notValidString, useVisibility } from '../../../../common/commonFunctions';
 import IList from '../../../../common/interfaces/IList';
 import { Mistake } from '../../../../common/Mistake/Mistake';
 
@@ -25,24 +25,27 @@ export default function AddListButton(props: { position: number; lists: IList[] 
   const { position, lists } = props;
   const id = useParams().boardId;
   const dispatch = useDispatch();
-  const [newListTitle, saveListTitle] = useState('');
-  const [showLabel, turnButton] = useState(true);
+  const [newListTitle, setNewListTitle] = useState('');
+  const [isLabelVisible, reverseVisibility] = useVisibility(true);
   const [mistake, setMistake] = useState({
     show: false,
-    text: 'Empty',
+    text: '',
     firstShow: true,
   });
-  if (!isStringValid(newListTitle) && !mistake.show && !mistake.firstShow) {
-    const mistakeText = notValidString(newListTitle);
-    setMistake({
-      show: true,
-      text: mistakeText,
-      firstShow: false,
-    });
-  }
-  if (showLabel) {
+  useEffect(() => {
+    setMistake({ show: false, firstShow: true, text: '' });
+    setNewListTitle('');
+  }, [isLabelVisible]);
+  useEffect(() => {
+    if (!isStringValid(newListTitle) && !mistake.show && !mistake.firstShow) {
+      const mistakeText = notValidString(newListTitle);
+      setMistake((prevState) => ({ ...prevState, show: true, text: mistakeText }));
+    }
+  }, [newListTitle, mistake]);
+
+  if (isLabelVisible || !id) {
     return (
-      <div onClick={(): void => turnButton(false)} className="add_list_label">
+      <div onClick={(): void => reverseVisibility()} className="add_list_label">
         <p>New list</p>
       </div>
     );
@@ -53,12 +56,8 @@ export default function AddListButton(props: { position: number; lists: IList[] 
         id="add_list_form"
         placeholder="enter title"
         onChange={(event): void => {
-          saveListTitle(event.currentTarget.value);
-          setMistake({
-            text: mistake.text,
-            show: false,
-            firstShow: false,
-          });
+          setNewListTitle(event.currentTarget.value);
+          setMistake((prevState) => ({ ...prevState, show: false, firstShow: false }));
         }}
       />
       <Mistake text={mistake.text} show={mistake.show} />
@@ -66,17 +65,13 @@ export default function AddListButton(props: { position: number; lists: IList[] 
         <button
           className="add_list_submit"
           onClick={(): void => {
-            createList(dispatch, newListTitle, id || '', position, lists);
-            setMistake({
-              text: newListTitle,
-              show: mistake.show,
-              firstShow: false,
-            });
+            createList(dispatch, newListTitle, id, position, lists);
+            reverseVisibility();
           }}
         >
           Add
         </button>
-        <div onClick={(): void => turnButton(true)} className="delete_button" />
+        <div onClick={(): void => reverseVisibility()} className="delete_button" />
       </div>
     </div>
   );
