@@ -24,6 +24,7 @@ const mapStateToProps = (state: StateType): PropsType => ({
 export default function Home(): React.ReactElement {
   const dispatch = useDispatch();
   const { boards } = useSelector(mapStateToProps);
+
   if (!boards) {
     getBoards(dispatch);
     return <Loading />;

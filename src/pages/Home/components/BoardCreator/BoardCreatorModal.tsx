@@ -27,10 +27,15 @@ export async function createBoard(dispatch: Dispatch, board_title: string, board
   }
 }
 
-export default function BoardCreatorModal(props: { boards: IBoard[] }): JSX.Element {
+export default function BoardCreatorModal({
+  boards,
+  reverseVisibility,
+}: {
+  boards: IBoard[];
+  reverseVisibility: () => void;
+}): JSX.Element {
   const dispatch = useDispatch();
   const [boardTitle, setBoardTitle] = useState('');
-  const { boards } = props;
   const [mistake, setMistake] = useState({
     show: false,
     text: 'Empty',
@@ -50,12 +55,13 @@ export default function BoardCreatorModal(props: { boards: IBoard[] }): JSX.Elem
       });
     }
   });
-
+  useEffect(() => setBoardTitle(''), []);
   async function checkBoardTitle(title: string): Promise<string> {
     await disableButton(true);
     const boardTitles = boards.map((board) => board.title);
     const titleDuplication = boardTitles.includes(title);
     if (isStringValid(title) && !titleDuplication) {
+      reverseVisibility();
       const promise = await createBoard(dispatch, title, boards);
       await getBoards(dispatch);
       return promise;
@@ -76,7 +82,7 @@ export default function BoardCreatorModal(props: { boards: IBoard[] }): JSX.Elem
             show: false,
             firstShow: false,
           });
-          setBoardTitle(event.currentTarget.value || '');
+          setBoardTitle(event.currentTarget.value);
         }}
       />
       <Mistake text={mistake.text} show={mistake.show} />

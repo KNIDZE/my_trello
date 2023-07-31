@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './board.scss';
@@ -50,18 +50,20 @@ export default function Board(): JSX.Element {
     firstShow: true,
   });
   const [boardTitle, setTitle] = useState(board.title);
-  if (boardTitle !== board.title) setTitle(board.title);
-  if (!isStringValid(boardTitle) && !mistake.show && !mistake.firstShow) {
-    const mistakeText = notValidString(boardTitle);
-    setMistake({
-      show: true,
-      text: mistakeText,
-      firstShow: false,
-    });
-  }
+  // once loading board when mounting
+  useEffect(() => {
+    if (boardId) getBoard(dispatch, boardId);
+  }, []);
+  useEffect(() => setTitle(board.title), [board.title]);
+  useEffect(() => {
+    if (!isStringValid(boardTitle) && !mistake.show && !mistake.firstShow) {
+      const mistakeText = notValidString(boardTitle);
+      setMistake((prevState) => ({ ...prevState, show: true, text: mistakeText }));
+    }
+  }, [boardTitle, mistake]);
+
   // render part
-  if (!board.title) {
-    getBoard(dispatch, boardId || '');
+  if (!board.title || !boardId) {
     return <Loading />;
   }
   return (
@@ -72,7 +74,7 @@ export default function Board(): JSX.Element {
         e.stopPropagation();
       }}
       // if card drops not in list
-      onDrop={(): Promise<void> => getBoard(dispatch, boardId || '')}
+      onDrop={(): Promise<void> => getBoard(dispatch, boardId)}
     >
       <div className="table_title_div">
         <Link className="link_home" onClick={(): void => clearBoardState(dispatch)} to="/">
@@ -86,20 +88,11 @@ export default function Board(): JSX.Element {
           placeholder="One more board..."
           onChange={(event): void => {
             if (!isStringValid(event.currentTarget.value))
-              setMistake({
-                text: mistake.text,
-                show: mistake.show,
-                firstShow: false,
-              });
-            else
-              setMistake({
-                text: mistake.text,
-                show: false,
-                firstShow: false,
-              });
+              setMistake((prevState) => ({ ...prevState, firstShow: false }));
+            else setMistake((prevState) => ({ ...prevState, show: false, firstShow: false }));
             setTitle(event.currentTarget.value);
           }}
-          onBlur={(e): void => renameBoard(dispatch, e.currentTarget.value, boardId || '')}
+          onBlur={(e): void => renameBoard(dispatch, e.currentTarget.value, boardId)}
         />
         <Mistake text={mistake.text} show={mistake.show} />
       </div>

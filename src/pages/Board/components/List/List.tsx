@@ -25,8 +25,7 @@ export function renameListOrError(dispatch: Dispatch, title: string, listId: str
   if (isStringValid(title)) renameList(dispatch, title, listId, boardId);
 }
 
-export default function List(props: ListProps): React.ReactElement {
-  const { lists, dragCard, slotPosition, id, isDragging } = props;
+export default function List({ lists, dragCard, slotPosition, id, isDragging }: ListProps): React.ReactElement {
   const { title, cards } = lists.filter((list) => list.id === id)[0];
   const dispatch = useDispatch();
   const { boardId } = useParams();
@@ -38,24 +37,41 @@ export default function List(props: ListProps): React.ReactElement {
     text: 'Empty',
     firstShow: true,
   });
-  if (!isStringValid(listTitle) && !mistake.show && !mistake.firstShow) {
-    const mistakeText = notValidString(listTitle);
-    setMistake({
-      show: true,
-      text: mistakeText,
-      firstShow: false,
+  useEffect(() => {
+    if (!isStringValid(listTitle) && !mistake.show && !mistake.firstShow) {
+      const mistakeText = notValidString(listTitle);
+      setMistake((prevState) => ({ ...prevState, show: true, text: mistakeText }));
+    }
+  }, [listTitle, mistake]);
+  useEffect(() => setCards(cards), [cards]);
+  useEffect(() => {
+    if (listCards.filter((card) => card.id === -1).length === 0) {
+      listCards.push({
+        id: -1,
+        position: slotPosition === -1 ? listCards.length : slotPosition,
+        listId: id,
+        title: '',
+      });
+    }
+    // adding slot to list if it hasn't
+    const slot = listCards.filter((card) => card.id === -1)[0];
+    if (slot.position !== slotPosition) {
+      setCards(listCards.filter((card) => card.id !== -1));
+    }
+  }, [listCards]);
+
+  function sortMapCards(): JSX.Element[] {
+    return listCards.sort(comparePositionCard).map((key) => {
+      let result;
+      if (key.id !== -1) {
+        result = <Card key={key.id} card={key} listId={id} isDragging={isDragging} />;
+      } else {
+        result = <CardSlot key={key.id} visible={slotVisible} />;
+      }
+      return result;
     });
   }
-  useEffect(() => setCards(cards), [cards]);
-  if (listCards.filter((card) => card.id === -1).length === 0) {
-    listCards.push({ id: -1, position: slotPosition === -1 ? listCards.length : slotPosition, listId: id, title: '' });
-  }
-
-  // adding slot to list if it hasn't
-  const slot = listCards.filter((card) => card.id === -1)[0];
-  if (slot.position !== slotPosition) {
-    setCards(listCards.filter((card) => card.id !== -1));
-  }
+  if (!boardId) return <div />;
   return (
     <div
       className="list"
@@ -86,10 +102,7 @@ export default function List(props: ListProps): React.ReactElement {
         }
       }}
     >
-      <div
-        className="delete_button"
-        onClick={(): Promise<void> => delList(dispatch, boardId || '', id.toString(), lists)}
-      >
+      <div className="delete_button" onClick={(): Promise<void> => delList(dispatch, boardId, id.toString(), lists)}>
         <CgCloseO color="white" size={100} />
       </div>
       <h2
@@ -97,35 +110,19 @@ export default function List(props: ListProps): React.ReactElement {
         suppressContentEditableWarning
         onInput={(event): void => {
           if (!isStringValid(event.currentTarget.innerHTML))
-            setMistake({
-              text: mistake.text,
-              show: mistake.show,
-              firstShow: false,
-            });
-          else
-            setMistake({
-              text: mistake.text,
-              show: false,
-              firstShow: false,
-            });
+            setMistake((prevState) => ({ ...prevState, firstShow: false }));
+          else setMistake((prevState) => ({ ...prevState, show: false, firstShow: false }));
           setTitle(event.currentTarget.innerHTML);
         }}
-        onBlur={(event): void =>
-          renameListOrError(dispatch, event.currentTarget.textContent || '', id.toString(), boardId || '')
-        }
+        onBlur={(event): void => {
+          if (event.currentTarget.textContent)
+            renameListOrError(dispatch, event.currentTarget.textContent, id.toString(), boardId);
+        }}
       >
         {title}
       </h2>
       <Mistake text={mistake.text} show={mistake.show} />
-      {listCards
-        .sort(comparePositionCard)
-        .map((key) =>
-          key.id !== -1 ? (
-            <Card key={key.id} card={key} listId={id} isDragging={isDragging} />
-          ) : (
-            <CardSlot key={key.id} visible={slotVisible} />
-          )
-        )}
+      {sortMapCards()}
       <CardCreator listId={id.toString()} lastCardPos={cards.length - 1} cards={listCards} changeList={setCards} />
     </div>
   );

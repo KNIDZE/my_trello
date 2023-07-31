@@ -1,0 +1,32 @@
+.select_container{
+  width: 100%;
+  position: relative;
+
+}
+.selector{
+  border: #318BC6 solid 4px;
+  position: absolute;
+  width: calc(100% - 8px);
+  height: 300px;
+  background-color: #318BC6;
+  border-radius: 30px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  :first-child{
+    border-top: none;
+  }
+  :last-child{
+    border-bottom: none;
+  }
+
+}
+.selector::-webkit-scrollbar{
+  display: none;
+}
+
+.arrow_down{
+  position: absolute;
+  right: 15px;
+  top:25px;
+  color: #318BC6;
+}
