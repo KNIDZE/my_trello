@@ -10,7 +10,7 @@ import { ICard } from '../../../../common/interfaces/ICard.t';
 
 async function createCard(
   text: string,
-  listId: string,
+  listId: number,
   boardId: string,
   position: number,
   changeList: React.Dispatch<React.SetStateAction<ICard[]>>,
@@ -48,7 +48,7 @@ export default function CardCreator(props: {
 
   async function handleClick(): Promise<void> {
     disableButton(true);
-    const creationOk = await createCard(cardText, listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
+    const creationOk = await createCard(cardText, +listId, boardId || '', lastCardPos + 1, changeList, cards, dispatch);
     if (!creationOk) {
       const input = document.getElementsByClassName('create_card_textarea')[0] as HTMLInputElement;
       input.value = 'Wrong card title. Use only letters, numbers, _, -';
